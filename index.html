@@ -3,33 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TERRA-INTELLIGENCE | Rosário do Ivaí</title>
+    <title>AGRO-PRECI | Inteligência Artificial e IoT</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <div id="popup-alerta" class="alert-popup hidden">
+        <div class="popup-content">
+            <span class="popup-icon">⚠️</span>
+            <div class="popup-text">
+                <strong id="popup-titulo">ALERTA PREDITIVO IA</strong>
+                <p id="popup-mensagem">Mensagem de telemetria base.</p>
+            </div>
+            <button id="btn-fechar-popup" class="popup-close">✕</button>
+        </div>
+    </div>
+
     <div class="app-container">
+        
         <aside class="sidebar">
             <div class="sidebar-top">
                 <div class="brand">
-                    <span class="brand-icon">🌱</span>
+                    <img src="https://images.unsplash.com/photo-1463123081488-729f511726f6?w=100&auto=format&fit=crop&q=60" alt="Logo Agro-Preci" style="width: 40px; height: 40px; border-radius: 8px; object-fit: cover;">
                     <div class="brand-text">
-                        <h3>TERRA</h3>
-                        <span>INTELLIGENCE</span>
+                        <h3>AGRO-PRECI IA</h3>
+                        <span>ROSÁRIO DO IVAÍ</span>
                     </div>
                 </div>
                 
-                <div class="geo-context">
-                    <span class="geo-tag">📍 Região Alvo</span>
-                    <h4>Rosário do Ivaí - PR</h4>
-                    <p>Foco: Relevo declivoso, transição de culturas e proteção do Horizonte A.</p>
+                <div class="control-group">
+                    <label class="control-label">Filtro por Cultura</label>
+                    <select id="select-cultura" class="modern-select">
+                        <option value="todos">Todos os Setores</option>
+                        <option value="uva">Setor Sul - Uva Niágara</option>
+                        <option value="cafe">Setor Norte - Café Adensado</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Simulador de Clima</label>
+                    <div class="btn-group-clima">
+                        <button class="btn-clima active" id="btn-clima-normal">Estável</button>
+                        <button class="btn-clima" id="btn-clima-chuva">🌧️ Chuva</button>
+                        <button class="btn-clima" id="btn-clima-seca">☀️ Seca</button>
+                    </div>
                 </div>
             </div>
-
             <div class="sidebar-footer">
                 <span class="agrinho-badge">AGRINHO 2026</span>
             </div>
@@ -38,68 +63,85 @@
         <main class="main-content">
             <header class="main-header">
                 <div class="header-info">
-                    <h1>Monitoramento Volumétrico Estrutural</h1>
-                    <p>Rede de sensores IoT com transmissão via rádio de longo alcance (LoRa)</p>
-                </div>
-                <div class="system-status">
-                    <span class="status-pulse"></span>
-                    <span class="status-text">Rede Online</span>
+                    <h1>Matriz de Engenharia Preditiva</h1>
+                    <p>Sensores IoT integrados com algoritmos de Machine Learning para a Capital da Videira.</p>
                 </div>
             </header>
 
             <section class="kpi-section">
-                <div class="card uva">
-                    <div class="card-header">
-                        <span>UMIDADE - VITICULTURA</span>
-                        <span class="sector-tag">Setor Uva</span>
-                    </div>
-                    <div class="card-value" id="kpi-uva">--.-%</div>
-                    <p class="card-desc">Parâmetro ideal para maturação de videiras rústicas.</p>
+                <div class="card uva-card">
+                    <div class="card-header"><span>UMIDADE - VITICULTURA</span><span class="sector-tag">Uva</span></div>
+                    <div class="card-value" id="kpi-uva">58.7%</div>
+                    <p class="card-desc">Solo ideal para o desenvolvimento do bago.</p>
                 </div>
-
-                <div class="card cafe">
-                    <div class="card-header">
-                        <span>UMIDADE - CAFEICULTURA</span>
-                        <span class="sector-tag">Setor Café</span>
-                    </div>
-                    <div class="card-value" id="kpi-cafe">--.-%</div>
-                    <p class="card-desc">Garante a constância hídrica no pegamento da florada.</p>
+                
+                <div class="card cafe-card">
+                    <div class="card-header"><span>UMIDADE - CAFEICULTURA</span><span class="sector-tag">Café</span></div>
+                    <div class="card-value" id="kpi-cafe">66.3%</div>
+                    <p class="card-desc">Níveis estáveis ideais para a florada.</p>
                 </div>
-
+                
                 <div class="card sustentabilidade">
-                    <div class="card-header">
-                        <span>PREVENÇÃO DE EROSÃO</span>
-                        <span class="sector-tag highlight">Estável</span>
-                    </div>
-                    <div class="card-value">94.8%</div>
-                    <p class="card-desc">Eficiência das curvas de nível contra o escoamento.</p>
+                    <div class="card-header"><span>EFICIÊNCIA DA ENCOSTA</span><span class="sector-tag highlight" id="kpi-status-tag">Excelente</span></div>
+                    <div class="card-value" id="kpi-absorcao">94.8%</div>
+                    <p class="card-desc">Curvas de nível segurando o escoamento.</p>
                 </div>
             </section>
 
-            <section class="analytics-section">
-                <div class="chart-container">
-                    <h3>Potencial Matricial e Histórico de Absorção</h3>
-                    <div class="canvas-wrapper">
-                        <canvas id="liveAgroChart"></canvas>
+            <section class="middle-features-grid">
+                <div class="feature-box">
+                    <h3>Zoneamento por Satélite</h3>
+                    <div class="satellite-map">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop&q=60" alt="Mapa de satélite" style="position: absolute; width: 100%; height: 100%; object-fit: cover; opacity: 0.3;">
+                        <div class="map-overlay" id="map-target"></div>
+                        <span class="map-indicator" id="map-label">Mapa de Umidade Ativo</span>
                     </div>
                 </div>
+                <div class="feature-box">
+                    <h3>Controle de Atuadores (IoT)</h3>
+                    <div class="actuator-row">
+                        <div><h5>Motobomba Uva</h5><span class="actuator-status" id="status-bomba-uva">DESLIGADO</span></div>
+                        <label class="switch"><input type="checkbox" id="switch-uva"><span class="slider round"></span></label>
+                    </div>
+                    <div class="actuator-row">
+                        <div><h5>Aspersor Café</h5><span class="actuator-status" id="status-bomba-cafe">DESLIGADO</span></div>
+                        <label class="switch"><input type="checkbox" id="switch-cafe"><span class="slider round"></span></label>
+                    </div>
+                </div>
+                <div class="feature-box">
+                    <h3>Simulador de Economia</h3>
+                    <p class="calc-text">Tamanho da propriedade rural:</p>
+                    <div class="calc-input-group">
+                        <input type="number" id="input-hectares" value="2" min="1">
+                        <span>Hectares</span>
+                    </div>
+                    <div class="calc-result">
+                        <span class="calc-label">Economia Estimada</span>
+                        <h4 id="txt-economia">R$ 2.400,00</h4>
+                    </div>
+                </div>
+            </section>
 
+            <section class="bottom-intelligence-grid">
+                <div class="chart-container">
+                    <h3>Análise de Tendência Matricial <span class="ai-tag">Previsão IA Ativada</span></h3>
+                    <div class="canvas-wrapper"><canvas id="liveAgroChart"></canvas></div>
+                </div>
                 <div class="diagnostic-container">
-                    <h3>Diagnóstico de Campo</h3>
-                    
-                    <div class="diagnostic-item">
-                        <h5>Cobertura Morta Ativa</h5>
-                        <p>Evapotranspiração reduzida drasticamente entre as fileiras de plantio irrigado.</p>
+                    <h3>AgroBot Diagnóstico</h3>
+                    <div class="hardware-status-grid">
+                        <div class="hw-item">📡 Sinal LoRa: <strong>-68 dBm</strong> <small class="good">OK</small></div>
+                        <div class="hw-item">🔋 Bateria Nós: <strong>92%</strong> <small class="good">Solar</small></div>
                     </div>
-
-                    <div class="diagnostic-item normal">
-                        <h5>Infiltração Profunda</h5>
-                        <p>Sensores a 40cm apontam percolação estável, sem riscos de lixiviação de nutrientes.</p>
-                    </div>
-
-                    <div class="agrinho-philosophy">
-                        <h5>Impacto Social e Educativo</h5>
-                        <p>Ao capacitar o pequeno produtor de Rosário do Ivaí com dados precisos, o programa Agrinho promove a autonomia tecnológica no campo, gerando conservação ambiental e fixação do jovem na propriedade familiar.</p>
+                    <div class="chatbot-wrapper">
+                        <div class="chat-messages" id="chat-box">
+                            <div class="message system">Olá! Sou o AgroBot IA. Clique em uma opção abaixo para analisar o solo de Rosário do Ivaí.</div>
+                        </div>
+                        <div class="chat-quick-replies">
+                            <button class="reply-btn" data-question="uva">Problemas na Uva?</button>
+                            <button class="reply-btn" data-question="relevo">E o relevo?</button>
+                            <button class="reply-btn" data-question="lora">Por que LoRa?</button>
+                        </div>
                     </div>
                 </div>
             </section>
