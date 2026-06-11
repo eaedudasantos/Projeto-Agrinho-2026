@@ -1,190 +1,202 @@
-/* Reset */
+/* 🎨 FOLHA DE ESTILOS (style.css) - PROJETO AGRINHO */
+
+/* Definição de Variáveis Globais (Facilita mudar as cores do projeto depois) */
+:root {
+    --verde-agrinho: #2b6e4c;
+    --verde-escuro: #1e4d34;
+    --verde-claro: #f0f7f2;
+    --cinza-texto: #2e3d30;
+    --cinza-fundo: #f4f7f4;
+    --branco: #ffffff;
+    
+    /* Cores de Alerta usadas pelo JavaScript */
+    --cor-seco: #d9534f;
+    --cor-ideal: #2b6e4c;
+    --cor-encharcado: #5bc0de;
+    --cor-moderado: #f0ad4e;
+}
+
+/* Configurações Gerais da Página */
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
+    /* Esta linha faz com que todas as mudanças de cor e tamanho enviadas pelo Script sejam suaves (animadas) */
+    transition: all 0.4s ease-in-out; 
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    min-height: 100vh;
-
-    /* Imagem de fundo */
-    background-image: url("images/fazenda.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-}
-
-/* Escurece o fundo */
-body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    z-index: -1;
-}
-
-/* ===== CABEÇALHO ===== */
-header {
-    width: 100%;
-    max-width: 1200px;
-    background: #1b5e20; /* verde escuro */
-    color: white;
-    text-align: center;
-    padding: 18px;
-    border-radius: 15px;
-    margin-bottom: 25px;
-    font-size: 1.6rem;
-    font-weight: bold;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-
-/* Container principal */
-.container {
-    width: 100%;
-    max-width: 1200px;
-
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-}
-
-/* Painéis */
-.painel {
-    background: rgba(255, 255, 255, 0.92);
-    backdrop-filter: blur(10px);
-
-    border-radius: 20px;
-    padding: 25px;
-
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-}
-
-/* Título interno */
-h1 {
-    text-align: center;
-    color: #1b5e20;
-    margin-bottom: 25px;
-    font-size: 2rem;
-}
-
-/* Grupos */
-.grupo {
-    margin-bottom: 20px;
-}
-
-.grupo label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: bold;
-    color: #333;
-}
-
-select,
-input[type="range"] {
-    width: 100%;
-    padding: 10px;
-}
-
-/* Checkbox */
-.checkbox {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Área dos resultados */
-.resultados {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-/* Cards */
-.card {
-    background: linear-gradient(
-        135deg,
-        #4caf50,
-        #2e7d32
-    );
-
-    color: white;
-
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    color: var(--cinza-texto);
+    background-color: var(--cinza-fundo);
+    line-height: 1.6;
+    margin: 0;
     padding: 20px;
-    border-radius: 15px;
+}
 
+/* Contentor que centraliza o projeto no ecrã */
+.container {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+/* Cabeçalho Principal (Banner) */
+.header-banner {
+    padding: 35px 25px;
+    background: linear-gradient(135deg, var(--verde-agrinho), var(--verde-escuro));
+    color: var(--branco);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(43, 110, 76, 0.2);
     text-align: center;
-
-    transition: 0.3s;
+    margin-bottom: 25px;
 }
 
-.card:hover {
-    transform: translateY(-5px);
+.header-banner h1 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+    letter-spacing: -0.5px;
 }
 
-.card h3 {
+.header-banner p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+/* 📊 CARD INTERATIVO DO SENSOR (Onde o Script atua) */
+.painel-sensor {
+    background: var(--branco);
+    padding: 30px;
+    margin-bottom: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    border: 2px solid #e1e8e2; /* Esta borda vai mudar de cor com o Script */
+}
+
+.painel-sensor h3 {
+    margin-top: 0;
+    color: var(--verde-escuro);
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.painel-sensor p {
+    color: #666;
+    margin: 5px 0;
+}
+
+/* O número grande que mostra a percentagem % */
+#valor-humidade {
+    font-size: 54px;
+    font-weight: 800;
+    color: var(--verde-agrinho); /* Também muda com o Script */
+    display: block;
+    margin: 15px 0;
+    font-family: monospace;
+}
+
+/* O botão/etiqueta de status que o Script altera */
+#status-mensagem {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 25px;
+    border-radius: 30px;
+    display: inline-block;
+    margin-top: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* 🟢 CLASSES DINÂMICAS: O JavaScript vai colocar e tirar estas classes do HTML */
+.status-seco {
+    background-color: #fde8e8;
+    color: #e53e3e;
+    border: 1px solid #fecaca;
+}
+
+.status-ideal {
+    background-color: #e6f4ea;
+    color: #137333;
+    border: 1px solid #ceead6;
+}
+
+.status-encharcado {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+    border: 1px solid #d2e3fc;
+}
+
+.status-moderado {
+    background-color: #fef7e0;
+    color: #b06000;
+    border: 1px solid #feebc8;
+}
+
+
+/* 📝 SECÇÕES DE DOCUMENTAÇÃO (Estilo do README) */
+.section {
+    background: var(--branco);
+    padding: 25px;
+    margin-bottom: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    border: 1px solid #e8eee9;
+}
+
+h2 {
+    font-size: 20px;
+    color: var(--verde-escuro);
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-left: 12px;
+    border-left: 5px solid var(--verde-agrinho); /* Linha verde bonita ao lado do título */
+}
+
+h3 {
+    color: var(--verde-agrinho);
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+/* Caixa de destaque para o Exemplo */
+.blockquote {
+    background-color: var(--verde-claro);
+    border-left: 4px solid var(--verde-agrinho);
+    padding: 15px;
+    margin: 20px 0;
+    font-style: italic;
+    border-radius: 0 8px 8px 0;
+}
+
+/* Listas */
+ul, ol {
+    padding-left: 22px;
+}
+
+li {
     margin-bottom: 10px;
 }
 
-.valor {
-    font-size: 2rem;
-    font-weight: bold;
+li strong {
+    color: var(--verde-escuro);
 }
 
-/* Status */
-.status-positivo {
-    background: #2e7d32;
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
+/* Código em destaque (Ex: index.html) */
+.link-placeholder {
+    background-color: #eef2ef;
+    color: var(--verde-escuro);
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-family: Consolas, monospace;
+    font-size: 14px;
 }
 
-.status-neutro {
-    background: #f9a825;
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
-}
-
-.status-negativo {
-    background: #c62828;
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
-}
-
-/* Imagem decorativa lateral */
-.imagem-agro {
-    position: fixed;
-    right: 20px;
-    bottom: 20px;
-
-    width: 180px;
-    opacity: 0.9;
-
-    animation: flutuar 4s ease-in-out infinite;
-}
-
-@keyframes flutuar {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0); }
-}
-
-/* Responsivo */
-@media (max-width: 900px) {
-    .container {
-        grid-template-columns: 1fr;
-    }
-
-    .imagem-agro {
-        width: 120px;
-    }
+/* Rodapé */
+.footer {
+    margin-top: 40px;
+    padding: 20px 0;
+    border-top: 1px solid #e1e8e2;
+    font-size: 13px;
+    color: #7a8a7c;
+    text-align: center;
 }

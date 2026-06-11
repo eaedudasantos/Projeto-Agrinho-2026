@@ -1,354 +1,306 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AgroSustentável Pro</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Agrinho - Painel e Documentação</title>
+    
+    <style>
+        /* Configurações Gerais e Cores Base */
+        :root {
+            --verde-agrinho: #2b6e4c;
+            --verde-escuro: #1e4d34;
+            --verde-claro: #f0f7f2;
+            --cinza-texto: #2e3d30;
+            --cinza-fundo: #f4f7f4;
+            --branco: #ffffff;
+            
+            /* Cores dinâmicas para o Script utilizar */
+            --cor-alerta: #d9534f;
+            --cor-sucesso: #2b6e4c;
+            --cor-info: #5bc0de;
+            --cor-aviso: #f0ad4e;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+        * {
+            box-sizing: border-box;
+            transition: all 0.4s ease; /* Faz as mudanças do script ficarem suaves */
+        }
 
-<style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: var(--cinza-texto);
+            background-color: var(--cinza-fundo);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background: #f4f7f6;
-    color: #333;
-}
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
 
-/* ===== CAPA (HERO) ===== */
-.hero {
-    height: 100vh;
-    background: url('https://images.unsplash.com/photo-1581091012184-83982b116ff5?auto=format&fit=crop&w=1470&q=80') no-repeat center center;
-    background-size: cover;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    color: white;
-    position: relative;
-}
+        /* Cabeçalho Principal */
+        .header-banner {
+            padding: 35px 25px;
+            background: linear-gradient(135deg, var(--verde-agrinho), var(--verde-escuro));
+            color: var(--branco);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(43, 110, 76, 0.2);
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .header-banner h1 { margin: 0 0 10px 0; font-size: 28px; letter-spacing: -0.5px; }
+        .header-banner p { margin: 0; opacity: 0.9; font-size: 16px; font-weight: 300; }
+        
+        /* 📊 PAINEL INTERATIVO DO SENSOR (Conexão Direta com o Script) */
+        .painel-sensor {
+            background: var(--branco);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            border: 2px solid #e1e8e2;
+            position: relative;
+            overflow: hidden;
+        }
 
-.hero::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(46,125,50,0.6);
-}
+        /* Linha decorativa superior que muda de cor via JavaScript */
+        .painel-sensor::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background-color: var(--verde-agrinho);
+            id: barra-status; /* Alvo conceitual do script */
+        }
 
-.hero-content {
-    position: relative;
-    max-width: 800px;
-    padding: 20px;
-}
+        .painel-sensor h3 {
+            margin-top: 0;
+            color: var(--verde-escuro);
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
-.hero h1 {
-    font-size: 60px;
-    margin-bottom: 15px;
-}
+        .painel-sensor p { color: #666; margin: 5px 0; }
 
-.hero p {
-    font-size: 20px;
-    opacity: 0.9;
-}
+        /* O número grande da humidade */
+        #valor-humidade {
+            font-size: 54px;
+            font-weight: 800;
+            color: var(--verde-agrinho);
+            display: block;
+            margin: 15px 0;
+            font-family: monospace;
+        }
 
-/* ===== CONTAINER ===== */
-.container {
-    max-width: 1200px;
-    margin: 50px auto;
-    padding: 0 20px;
-}
+        /* A caixa de texto que o JavaScript altera as classes */
+        #status-mensagem {
+            font-size: 15px;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 30px;
+            display: inline-block;
+            margin-top: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
 
-/* ===== GRID ===== */
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-}
+        /* Classes que o Script vai injetar dinamicamente */
+        .status-seco { background-color: #fde8e8; color: #e53e3e; border: 1px solid #fecaca; }
+        .status-ideal { background-color: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
+        .status-encharcado { background-color: #e8f0fe; color: #1a73e8; border: 1px solid #d2e3fc; }
+        .status-moderado { background-color: #fef7e0; color: #b06000; border: 1px solid #feebc8; }
 
-@media(max-width: 900px) {
-    .grid { grid-template-columns: 1fr; }
-}
+        /* Secções de Documentação (README) */
+        .section {
+            background: var(--branco);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            border: 1px solid #e8eee9;
+        }
+        
+        h2 {
+            font-size: 20px;
+            color: var(--verde-escuro);
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-left: 12px;
+            border-left: 5px solid var(--verde-agrinho);
+        }
 
-/* ===== CARDS ===== */
-.card {
-    background: white;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
-}
+        h3 { color: var(--verde-agrinho); font-size: 16px; margin-top: 20px; }
+        
+        .blockquote {
+            background-color: var(--verde-claro);
+            border-left: 4px solid var(--verde-agrinho);
+            padding: 15px;
+            margin: 20px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
 
-h2 {
-    color: #2e7d32;
-    margin-bottom: 20px;
-}
+        ul, ol { padding-left: 22px; }
+        li { margin-bottom: 10px; }
+        li strong { color: var(--verde-escuro); }
 
-/* ===== FORM ===== */
-label {
-    display: block;
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 5px;
-}
+        .link-placeholder {
+            background-color: #eef2ef;
+            color: var(--verde-escuro);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+        }
 
-select, input[type="range"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 18px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
-}
-
-button {
-    width: 100%;
-    padding: 14px;
-    background: #2e7d32;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-weight: 700;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #1b5e20;
-}
-
-/* ===== RESULTADOS ===== */
-.result {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.box {
-    background: #f6f9f7;
-    padding: 18px;
-    border-radius: 12px;
-    text-align: center;
-}
-
-.big {
-    font-size: 24px;
-    font-weight: bold;
-    color: #2e7d32;
-}
-
-/* ===== BARRA ===== */
-.bar {
-    height: 10px;
-    background: #ddd;
-    border-radius: 20px;
-    overflow: hidden;
-    margin-top: 8px;
-}
-
-.fill {
-    height: 100%;
-    background: #2e7d32;
-}
-
-/* ===== TABELA ===== */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 40px;
-}
-
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: center;
-}
-
-table th {
-    background: #2e7d32;
-    color: white;
-}
-
-table tr:nth-child(even) {
-    background: #f6f9f7;
-}
-
-/* ===== FOOTER ===== */
-footer {
-    text-align: center;
-    padding: 25px;
-    background: #111;
-    color: white;
-    margin-top: 60px;
-}
-</style>
+        /* Rodapé */
+        .footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            border-top: 1px solid #e1e8e2;
+            font-size: 13px;
+            color: #7a8a7c;
+            text-align: center;
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- ===== CAPA ===== -->
-<section class="hero">
-    <div class="hero-content">
-        <h1>🌾 AgroSustentável Pro</h1>
-        <p>Sistema inteligente de simulação agrícola para produtividade e sustentabilidade</p>
-    </div>
-</section>
+    <div class="container">
+        <div class="header-banner">
+            <h1>🌾 Projeto Agrinho</h1>
+            <p>Painel Automatizado e Documentação Técnica</p>
+        </div>
 
-<!-- ===== CONTEÚDO ===== -->
-<div class="container">
-
-<div class="grid">
-
-    <!-- CONTROLES -->
-    <div class="card">
-        <h2>🌱 Simulação Agrícola</h2>
-
-        <label>Cultura</label>
-        <select id="cultura">
-            <option value="soja">Soja</option>
-            <option value="milho">Milho</option>
-            <option value="cafe">Café</option>
-            <option value="trigo">Trigo</option>
-            <option value="algodao">Algodão</option>
-        </select>
-
-        <label>Clima</label>
-        <select id="clima">
-            <option value="ideal">Ideal</option>
-            <option value="seca">Seca</option>
-            <option value="chuva">Chuva intensa</option>
-        </select>
-
-        <label>Irrigação</label>
-        <select id="irrigacao">
-            <option value="nenhuma">Nenhuma</option>
-            <option value="gotejamento">Gotejamento</option>
-            <option value="aspersao">Aspersão</option>
-        </select>
-
-        <label>Fertilizante (%)</label>
-        <input type="range" id="fert" min="0" max="100" value="50">
-        <p id="val">50%</p>
-
-        <button onclick="simular()">Executar Simulação</button>
-    </div>
-
-    <!-- RESULTADOS -->
-    <div class="card">
-        <h2>📊 Indicadores</h2>
-
-        <div class="result">
-            <div class="box">
-                <p>Produtividade</p>
-                <div class="big" id="prod">50%</div>
-                <div class="bar"><div id="barProd" class="fill" style="width:50%"></div></div>
+        <div id="card-sensor" class="painel-sensor">
+            <h3>📊 Monitorização de Solo em Tempo Real</h3>
+            <p>Dados simulados recebidos do sensor de campo:</p>
+            <strong id="valor-humidade">0%</strong>
+            <div>
+                <span id="status-mensagem" class="status-ideal">A inicializar leituras...</span>
             </div>
+            <p style="font-size: 11px; color: #aaabaa; margin-top: 20px;">
+                🔄 O JavaScript atualiza este bloco a cada 5 segundos mudando as classes do CSS.
+            </p>
+        </div>
 
-            <div class="box">
-                <p>Solo</p>
-                <div class="big" id="solo">60%</div>
-                <div class="bar"><div id="barSolo" class="fill" style="width:60%"></div></div>
+        <div class="section">
+            <h2>📝 Sobre o Projeto</h2>
+            <p>Insira aqui uma breve descrição do que é o seu projeto. Explique qual o problema do campo ou da comunidade que decidiram resolver.</p>
+            <div class="blockquote">
+                <strong>Exemplo Prático:</strong> Este projeto foi desenvolvido para a feira do Agrinho, com o objetivo de conscientizar sobre o uso sustentável da água na agricultura familiar através de monitorização automatizada.
             </div>
+        </div>
 
-            <div class="box">
-                <p>CO₂</p>
-                <div class="big" id="carbono">5</div>
-            </div>
+        <div class="section">
+            <h2>🚀 Funcionalidades e Objetivos</h2>
+            <ul>
+                <li><strong>Leitura Inteligente:</strong> Análise instantânea das necessidades hídricas da planta.</li>
+                <li><strong>Design Responsivo:</strong> Interface limpa desenvolvida especificamente para ecrãs de smartphones de produtores rurais.</li>
+                <li><strong>Economia de Recursos:</strong> Foco total na redução do desperdício de água em pequenas propriedades.</li>
+            </ul>
+        </div>
 
-            <div class="box">
-                <p>ESG</p>
-                <div class="big" id="esg">B</div>
-            </div>
+        <div class="section">
+            <h2>🛠️ Tecnologias Utilizadas</h2>
+            <h3>Hardware Proposto</h3>
+            <ul><li>Componentes: Arduino UNO, Sensor Higrómetro de Solo e Módulo Relé.</li></ul>
+            <h3>Software e Design</h3>
+            <ul><li>Linguagens e Estilos: HTML5 estrutural, CSS3 baseado em variáveis modernas, e lógica em JavaScript nativo.</li></ul>
+        </div>
+
+        <div class="section">
+            <h2>📦 Como Rodar o Projeto</h2>
+            <ol>
+                <li>Faça o clone do repositório: <span class="link-placeholder">[Link do Repositório]</span>.</li>
+                <li>Abra o ficheiro <span class="link-placeholder">index.html</span> em qualquer navegador web atualizado.</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h2>👥 Equipa</h2>
+            <ul>
+                <li><strong>[Seu Nome]</strong> - Engenharia de Software & CSS</li>
+                <li><strong>[Nome do Colega]</strong> - Hardware e Pesquisa de Campo</li>
+                <li><strong>[Professor]</strong> - Orientador / Mentor</li>
+            </ul>
+            <p><strong>Escola:</strong> [Nome da Escola / Colégio]</p>
+        </div>
+
+        <div class="footer">
+            📄 Desenvolvido com orgulho para o Concurso Pedagógico Agrinho.
         </div>
     </div>
 
-</div>
+    <script>
+        const LIMIAR_SECO = 35;       
+        const LIMIAR_IDEAL_MIN = 45;  
+        const LIMIAR_IDEAL_MAX = 75;
 
-<!-- ===== TABELA ===== -->
-<h2 style="margin-top:50px; color:#2e7d32;">☀️ Clima Ideal para Culturas</h2>
+        function analisarSolo(percentagemHumidade) {
+            let mensagem = "";
+            let classeCss = "";
+            let corBordaSuperior = "";
 
-<table>
-    <tr>
-        <th>Cultura</th>
-        <th>Temperatura</th>
-        <th>Chuva</th>
-        <th>Observação</th>
-    </tr>
-    <tr>
-        <td>Soja</td>
-        <td>20–30°C</td>
-        <td>80–120 mm</td>
-        <td>Solo bem drenado</td>
-    </tr>
-    <tr>
-        <td>Milho</td>
-        <td>18–28°C</td>
-        <td>90–150 mm</td>
-        <td>Evitar encharcamento</td>
-    </tr>
-    <tr>
-        <td>Café</td>
-        <td>16–24°C</td>
-        <td>100–200 mm</td>
-        <td>Meia sombra</td>
-    </tr>
-    <tr>
-        <td>Trigo</td>
-        <td>12–22°C</td>
-        <td>50–100 mm</td>
-        <td>Clima seco na colheita</td>
-    </tr>
-</table>
+            if (percentagemHumidade < LIMIAR_SECO) {
+                mensagem = "🚨 ALERTA: Solo muito seco! Ativar rega imediata.";
+                classeCss = "status-seco";
+                corBordaSuperior = "#d9534f"; // Vermelho
+            } else if (percentagemHumidade >= LIMIAR_IDEAL_MIN && percentagemHumidade <= LIMIAR_IDEAL_MAX) {
+                mensagem = "✅ Solo Saudável: Humidade ideal para cultivo.";
+                classeCss = "status-ideal";
+                corBordaSuperior = "#2b6e4c"; // Verde
+            } else if (percentagemHumidade > LIMIAR_IDEAL_MAX) {
+                mensagem = "⚠️ Atenção: Solo encharcado. Desligar sistemas.";
+                classeCss = "status-encharcado";
+                corBordaSuperior = "#5bc0de"; // Azul
+            } else {
+                mensagem = "💧 Humidade moderada. Monitorizar evolução.";
+                classeCss = "status-moderado";
+                corBordaSuperior = "#f0ad4e"; // Amarelo
+            }
 
-</div>
+            return { texto: mensagem, classe: classeCss, corBorda: corBordaSuperior };
+        }
 
-<!-- ===== FOOTER ===== -->
-<footer>
-    © 2026 AgroSustentável Pro - Todos os direitos reservados
-</footer>
+        function atualizarPainel() {
+            // Simula uma flutuação real do sensor (15% a 95%)
+            const valorSensorSimulado = Math.floor(Math.random() * (95 - 15 + 1)) + 15;
+            const diagnostico = analisarSolo(valorSensorSimulado);
 
-<!-- ===== SCRIPT ===== -->
-<script>
-document.getElementById("fert").addEventListener("input", e=>{
-    document.getElementById("val").innerText = e.target.value + "%";
-});
+            const elementoHumidade = document.getElementById("valor-humidade");
+            const elementoStatus = document.getElementById("status-mensagem");
+            const cardSensor = document.getElementById("card-sensor");
 
-function simular(){
-    let prod = 50;
-    let solo = 60;
-    let carbono = 5;
-    let esg = "B";
+            if (elementoHumidade && elementoStatus && cardSensor) {
+                // 1. Atualiza o valor numérico
+                elementoHumidade.innerText = valorSensorSimulado + "%";
+                
+                // 2. Altera o texto informativo
+                elementoStatus.innerText = diagnostico.texto;
+                
+                // 3. Limpa as classes antigas do CSS e injeta a nova classe correta
+                elementoStatus.className = ""; // limpa
+                elementoStatus.classList.add(diagnostico.classe);
+                
+                // 4. Altera dinamicamente a cor da linha superior do card
+                cardSensor.style.borderColor = diagnostico.corBorda;
+                elementoHumidade.style.color = diagnostico.corBorda;
+            }
+        }
 
-    let fert = parseInt(document.getElementById("fert").value);
-    let clima = document.getElementById("clima").value;
-    let irr = document.getElementById("irrigacao").value;
-
-    carbono += (fert - 50) * 0.5;
-
-    if(fert > 70){ prod += 15; solo -= 10; carbono += 10; }
-    else if(fert < 30){ prod -= 8; solo += 8; carbono -= 5; }
-
-    if(clima == "seca"){ prod -= 10; solo -= 7; carbono += 4; }
-    if(clima == "chuva"){ prod += 4; solo -= 4; carbono += 2; }
-
-    if(irr == "gotejamento"){ prod += 12; solo += 10; carbono -= 6; }
-    if(irr == "aspersao"){ prod += 7; solo -= 6; carbono += 5; }
-
-    prod = Math.max(0, Math.min(100, prod));
-    solo = Math.max(0, Math.min(100, solo));
-
-    document.getElementById("prod").innerText = prod + "%";
-    document.getElementById("solo").innerText = solo + "%";
-    document.getElementById("carbono").innerText = carbono.toFixed(1);
-
-    if(prod > 80 && solo > 80) esg = "A+";
-    else if(prod > 65) esg = "A";
-    else if(prod > 50) esg = "B+";
-    else esg = "B";
-
-    document.getElementById("esg").innerText = esg;
-
-    document.getElementById("barProd").style.width = prod + "%";
-    document.getElementById("barSolo").style.width = solo + "%";
-}
-</script>
-
+        // Inicialização
+        window.onload = function() {
+            atualizarPainel();
+            // Executa a atualização a cada 5 segundos de forma contínua
+            setInterval(atualizarPainel, 5000);
+        };
+    </script>
 </body>
 </html>
