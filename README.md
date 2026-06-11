@@ -30,11 +30,11 @@ Dê instruções simples de como as pessoas podem ver o trabalho de vocês:
 
 ---
 
-## 👥 Equipe Desenvolvedora
+## Desenvolvedora
 Deixe o crédito para todo mundo que ajudou a fazer acontecer!
 *   **Maria Eduarda dos Santos Souza** - (Ex: Desenvolvedor Front-end / Pesquisador)
-*   **[Paulo Marcello Silva]** - Professor(a) Orientador(a)
-*   **Colégio / Escola:** Colégio Estadual José Siqueira Rosas - ensino Fundamental e Médio em Tempo Integral
+*   **Paulo Marcello Silva** - Professor(a) Orientador(a)
+*   **Colégio:** Colégio Estadual José Siqueira Rosas - ensino Fundamental e Médio em Tempo Integral
 
 ---
 
