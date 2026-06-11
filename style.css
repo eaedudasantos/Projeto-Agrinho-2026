@@ -1,202 +1,185 @@
-/* 🎨 FOLHA DE ESTILOS (style.css) - PROJETO AGRINHO */
-
-/* Definição de Variáveis Globais (Facilita mudar as cores do projeto depois) */
+/* Definição de Paleta de Cores e Variáveis Dinâmicas */
 :root {
-    --verde-agrinho: #2b6e4c;
-    --verde-escuro: #1e4d34;
-    --verde-claro: #f0f7f2;
-    --cinza-texto: #2e3d30;
-    --cinza-fundo: #f4f7f4;
-    --branco: #ffffff;
+    --bg-dark-core: #070913;
+    --bg-dark-card: rgba(16, 22, 40, 0.65);
+    --border-color: rgba(255, 255, 255, 0.06);
+    --text-main: #f8fafc;
+    --text-sub: #94a3b8;
     
-    /* Cores de Alerta usadas pelo JavaScript */
-    --cor-seco: #d9534f;
-    --cor-ideal: #2b6e4c;
-    --cor-encharcado: #5bc0de;
-    --cor-moderado: #f0ad4e;
+    /* Cores de Identidade Agro-Tech */
+    --neon-green: #00e676;
+    --neon-purple: #bf5af2;
+    --neon-blue: #0a84ff;
+    --neon-orange: #ff9f0a;
 }
 
-/* Configurações Gerais da Página */
 * {
     box-sizing: border-box;
-    /* Esta linha faz com que todas as mudanças de cor e tamanho enviadas pelo Script sejam suaves (animadas) */
-    transition: all 0.4s ease-in-out; 
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-    color: var(--cinza-texto);
-    background-color: var(--cinza-fundo);
-    line-height: 1.6;
-    margin: 0;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: var(--bg-dark-core);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.app-container {
+    display: flex;
+    width: 100vw;
+    min-height: 100vh;
+}
+
+/* SIDEBAR ESTILIZADA */
+.sidebar {
+    width: 300px;
+    background-color: #0b0e1a;
+    border-right: 1px solid var(--border-color);
+    padding: 40px 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+}
+
+.brand-icon { font-size: 1.8rem; }
+.brand-text h3 { font-size: 1.2rem; font-weight: 800; letter-spacing: 1px; }
+.brand-text span { font-size: 0.7rem; color: var(--neon-green); font-weight: 700; letter-spacing: 2px; }
+
+.geo-context {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
     padding: 20px;
+    border-radius: 16px;
 }
 
-/* Contentor que centraliza o projeto no ecrã */
-.container {
-    max-width: 850px;
-    margin: 0 auto;
-}
+.geo-tag { font-size: 0.75rem; color: var(--neon-orange); font-weight: 700; text-transform: uppercase; }
+.geo-context h4 { font-size: 1.1rem; margin: 8px 0; }
+.geo-context p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.5; }
 
-/* Cabeçalho Principal (Banner) */
-.header-banner {
-    padding: 35px 25px;
-    background: linear-gradient(135deg, var(--verde-agrinho), var(--verde-escuro));
-    color: var(--branco);
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(43, 110, 76, 0.2);
-    text-align: center;
-    margin-bottom: 25px;
-}
-
-.header-banner h1 {
-    margin: 0 0 10px 0;
-    font-size: 28px;
-    letter-spacing: -0.5px;
-}
-
-.header-banner p {
-    margin: 0;
-    opacity: 0.9;
-    font-size: 16px;
-    font-weight: 300;
-}
-
-/* 📊 CARD INTERATIVO DO SENSOR (Onde o Script atua) */
-.painel-sensor {
-    background: var(--branco);
-    padding: 30px;
-    margin-bottom: 30px;
-    border-radius: 12px;
-    text-align: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-    border: 2px solid #e1e8e2; /* Esta borda vai mudar de cor com o Script */
-}
-
-.painel-sensor h3 {
-    margin-top: 0;
-    color: var(--verde-escuro);
-    font-size: 18px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.painel-sensor p {
-    color: #666;
-    margin: 5px 0;
-}
-
-/* O número grande que mostra a percentagem % */
-#valor-humidade {
-    font-size: 54px;
-    font-weight: 800;
-    color: var(--verde-agrinho); /* Também muda com o Script */
+.agrinho-badge {
+    background: linear-gradient(135deg, #1b5e20, #fbc02d);
     display: block;
-    margin: 15px 0;
-    font-family: monospace;
-}
-
-/* O botão/etiqueta de status que o Script altera */
-#status-mensagem {
-    font-size: 15px;
-    font-weight: 600;
-    padding: 12px 25px;
-    border-radius: 30px;
-    display: inline-block;
-    margin-top: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-/* 🟢 CLASSES DINÂMICAS: O JavaScript vai colocar e tirar estas classes do HTML */
-.status-seco {
-    background-color: #fde8e8;
-    color: #e53e3e;
-    border: 1px solid #fecaca;
-}
-
-.status-ideal {
-    background-color: #e6f4ea;
-    color: #137333;
-    border: 1px solid #ceead6;
-}
-
-.status-encharcado {
-    background-color: #e8f0fe;
-    color: #1a73e8;
-    border: 1px solid #d2e3fc;
-}
-
-.status-moderado {
-    background-color: #fef7e0;
-    color: #b06000;
-    border: 1px solid #feebc8;
-}
-
-
-/* 📝 SECÇÕES DE DOCUMENTAÇÃO (Estilo do README) */
-.section {
-    background: var(--branco);
-    padding: 25px;
-    margin-bottom: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-    border: 1px solid #e8eee9;
-}
-
-h2 {
-    font-size: 20px;
-    color: var(--verde-escuro);
-    margin-top: 0;
-    margin-bottom: 20px;
-    padding-left: 12px;
-    border-left: 5px solid var(--verde-agrinho); /* Linha verde bonita ao lado do título */
-}
-
-h3 {
-    color: var(--verde-agrinho);
-    font-size: 16px;
-    margin-top: 20px;
-}
-
-/* Caixa de destaque para o Exemplo */
-.blockquote {
-    background-color: var(--verde-claro);
-    border-left: 4px solid var(--verde-agrinho);
-    padding: 15px;
-    margin: 20px 0;
-    font-style: italic;
-    border-radius: 0 8px 8px 0;
-}
-
-/* Listas */
-ul, ol {
-    padding-left: 22px;
-}
-
-li {
-    margin-bottom: 10px;
-}
-
-li strong {
-    color: var(--verde-escuro);
-}
-
-/* Código em destaque (Ex: index.html) */
-.link-placeholder {
-    background-color: #eef2ef;
-    color: var(--verde-escuro);
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-family: Consolas, monospace;
-    font-size: 14px;
-}
-
-/* Rodapé */
-.footer {
-    margin-top: 40px;
-    padding: 20px 0;
-    border-top: 1px solid #e1e8e2;
-    font-size: 13px;
-    color: #7a8a7c;
     text-align: center;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 800;
+    box-shadow: 0 4px 20px rgba(0, 230, 118, 0.15);
 }
+
+/* ÁREA DE CONTEÚDO PRINCIPAL */
+.main-content {
+    flex: 1;
+    padding: 40px 50px;
+    overflow-y: auto;
+}
+
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 24px;
+    margin-bottom: 35px;
+}
+
+.header-info h1 { font-size: 1.8rem; font-weight: 700; }
+.header-info p { color: var(--text-sub); font-size: 0.95rem; margin-top: 4px; }
+
+.system-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0, 230, 118, 0.06);
+    border: 1px solid rgba(0, 230, 118, 0.2);
+    padding: 8px 16px;
+    border-radius: 30px;
+}
+
+.status-pulse {
+    width: 8px;
+    height: 8px;
+    background-color: var(--neon-green);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--neon-green);
+}
+
+.status-text { font-size: 0.85rem; font-weight: 600; color: var(--neon-green); }
+
+/* SEÇÃO DE CARDS (KPI) */
+.kpi-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 35px;
+}
+
+.card {
+    background: var(--bg-dark-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 24px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.card:hover { transform: translateY(-4px); }
+.card.uva:hover { border-color: var(--neon-purple); }
+.card.cafe:hover { border-color: var(--neon-blue); }
+.card.sustentabilidade:hover { border-color: var(--neon-green); }
+
+.card-header { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-sub); font-weight: 700; letter-spacing: 0.5px; }
+.sector-tag { background: rgba(255,255,255,0.04); padding: 4px 10px; border-radius: 20px; }
+.sector-tag.highlight { color: var(--neon-green); background: rgba(0, 230, 118, 0.08); }
+.card-value { font-size: 2.4rem; font-weight: 800; margin: 16px 0 8px 0; letter-spacing: -1px; }
+.card-desc { font-size: 0.85rem; color: var(--text-sub); line-height: 1.4; }
+
+/* SEÇÃO ANALÍTICA */
+.analytics-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+}
+
+@media (max-width: 1100px) { .analytics-section { grid-template-columns: 1fr; } }
+
+.chart-container, .diagnostic-container {
+    background: var(--bg-dark-card);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.chart-container h3, .diagnostic-container h3 { font-size: 1.1rem; margin-bottom: 24px; font-weight: 600; }
+.canvas-wrapper { position: relative; height: 320px; width: 100%; }
+
+.diagnostic-item {
+    border-left: 3px solid var(--neon-blue);
+    padding-left: 14px;
+    margin-bottom: 20px;
+}
+
+.diagnostic-item h5 { font-size: 0.95rem; margin-bottom: 4px; }
+.diagnostic-item p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.4; }
+.diagnostic-item.normal { border-left-color: var(--neon-purple); }
+
+.agrinho-philosophy {
+    background: rgba(255, 214, 0, 0.02);
+    border: 1px dashed rgba(255, 214, 0, 0.2);
+    padding: 20px;
+    border-radius: 14px;
+    margin-top: 30px;
+}
+
+.agrinho-philosophy h5 { font-size: 0.95rem; color: #ffd600; margin-bottom: 6px; }
+.agrinho-philosophy p { font-size: 0.85rem; color: var(--text-sub); line-height: 1.5; }

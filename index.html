@@ -3,304 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projeto Agrinho - Painel e Documentação</title>
-    
-    <style>
-        /* Configurações Gerais e Cores Base */
-        :root {
-            --verde-agrinho: #2b6e4c;
-            --verde-escuro: #1e4d34;
-            --verde-claro: #f0f7f2;
-            --cinza-texto: #2e3d30;
-            --cinza-fundo: #f4f7f4;
-            --branco: #ffffff;
-            
-            /* Cores dinâmicas para o Script utilizar */
-            --cor-alerta: #d9534f;
-            --cor-sucesso: #2b6e4c;
-            --cor-info: #5bc0de;
-            --cor-aviso: #f0ad4e;
-        }
-
-        * {
-            box-sizing: border-box;
-            transition: all 0.4s ease; /* Faz as mudanças do script ficarem suaves */
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            color: var(--cinza-texto);
-            background-color: var(--cinza-fundo);
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 850px;
-            margin: 0 auto;
-        }
-
-        /* Cabeçalho Principal */
-        .header-banner {
-            padding: 35px 25px;
-            background: linear-gradient(135deg, var(--verde-agrinho), var(--verde-escuro));
-            color: var(--branco);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(43, 110, 76, 0.2);
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        .header-banner h1 { margin: 0 0 10px 0; font-size: 28px; letter-spacing: -0.5px; }
-        .header-banner p { margin: 0; opacity: 0.9; font-size: 16px; font-weight: 300; }
-        
-        /* 📊 PAINEL INTERATIVO DO SENSOR (Conexão Direta com o Script) */
-        .painel-sensor {
-            background: var(--branco);
-            padding: 30px;
-            margin-bottom: 30px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-            border: 2px solid #e1e8e2;
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Linha decorativa superior que muda de cor via JavaScript */
-        .painel-sensor::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 6px;
-            background-color: var(--verde-agrinho);
-            id: barra-status; /* Alvo conceitual do script */
-        }
-
-        .painel-sensor h3 {
-            margin-top: 0;
-            color: var(--verde-escuro);
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .painel-sensor p { color: #666; margin: 5px 0; }
-
-        /* O número grande da humidade */
-        #valor-humidade {
-            font-size: 54px;
-            font-weight: 800;
-            color: var(--verde-agrinho);
-            display: block;
-            margin: 15px 0;
-            font-family: monospace;
-        }
-
-        /* A caixa de texto que o JavaScript altera as classes */
-        #status-mensagem {
-            font-size: 15px;
-            font-weight: 600;
-            padding: 12px 25px;
-            border-radius: 30px;
-            display: inline-block;
-            margin-top: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        /* Classes que o Script vai injetar dinamicamente */
-        .status-seco { background-color: #fde8e8; color: #e53e3e; border: 1px solid #fecaca; }
-        .status-ideal { background-color: #e6f4ea; color: #137333; border: 1px solid #ceead6; }
-        .status-encharcado { background-color: #e8f0fe; color: #1a73e8; border: 1px solid #d2e3fc; }
-        .status-moderado { background-color: #fef7e0; color: #b06000; border: 1px solid #feebc8; }
-
-        /* Secções de Documentação (README) */
-        .section {
-            background: var(--branco);
-            padding: 25px;
-            margin-bottom: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            border: 1px solid #e8eee9;
-        }
-        
-        h2 {
-            font-size: 20px;
-            color: var(--verde-escuro);
-            margin-top: 0;
-            margin-bottom: 20px;
-            padding-left: 12px;
-            border-left: 5px solid var(--verde-agrinho);
-        }
-
-        h3 { color: var(--verde-agrinho); font-size: 16px; margin-top: 20px; }
-        
-        .blockquote {
-            background-color: var(--verde-claro);
-            border-left: 4px solid var(--verde-agrinho);
-            padding: 15px;
-            margin: 20px 0;
-            font-style: italic;
-            border-radius: 0 8px 8px 0;
-        }
-
-        ul, ol { padding-left: 22px; }
-        li { margin-bottom: 10px; }
-        li strong { color: var(--verde-escuro); }
-
-        .link-placeholder {
-            background-color: #eef2ef;
-            color: var(--verde-escuro);
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-family: Consolas, monospace;
-            font-size: 14px;
-        }
-
-        /* Rodapé */
-        .footer {
-            margin-top: 40px;
-            padding: 20px 0;
-            border-top: 1px solid #e1e8e2;
-            font-size: 13px;
-            color: #7a8a7c;
-            text-align: center;
-        }
-    </style>
+    <title>TERRA-INTELLIGENCE | Rosário do Ivaí</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header-banner">
-            <h1>🌾 Projeto Agrinho</h1>
-            <p>Painel Automatizado e Documentação Técnica</p>
-        </div>
-
-        <div id="card-sensor" class="painel-sensor">
-            <h3>📊 Monitorização de Solo em Tempo Real</h3>
-            <p>Dados simulados recebidos do sensor de campo:</p>
-            <strong id="valor-humidade">0%</strong>
-            <div>
-                <span id="status-mensagem" class="status-ideal">A inicializar leituras...</span>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <div class="brand">
+                    <span class="brand-icon">🌱</span>
+                    <div class="brand-text">
+                        <h3>TERRA</h3>
+                        <span>INTELLIGENCE</span>
+                    </div>
+                </div>
+                
+                <div class="geo-context">
+                    <span class="geo-tag">📍 Região Alvo</span>
+                    <h4>Rosário do Ivaí - PR</h4>
+                    <p>Foco: Relevo declivoso, transição de culturas e proteção do Horizonte A.</p>
+                </div>
             </div>
-            <p style="font-size: 11px; color: #aaabaa; margin-top: 20px;">
-                🔄 O JavaScript atualiza este bloco a cada 5 segundos mudando as classes do CSS.
-            </p>
-        </div>
 
-        <div class="section">
-            <h2>📝 Sobre o Projeto</h2>
-            <p>Insira aqui uma breve descrição do que é o seu projeto. Explique qual o problema do campo ou da comunidade que decidiram resolver.</p>
-            <div class="blockquote">
-                <strong>Exemplo Prático:</strong> Este projeto foi desenvolvido para a feira do Agrinho, com o objetivo de conscientizar sobre o uso sustentável da água na agricultura familiar através de monitorização automatizada.
+            <div class="sidebar-footer">
+                <span class="agrinho-badge">AGRINHO 2026</span>
             </div>
-        </div>
+        </aside>
 
-        <div class="section">
-            <h2>🚀 Funcionalidades e Objetivos</h2>
-            <ul>
-                <li><strong>Leitura Inteligente:</strong> Análise instantânea das necessidades hídricas da planta.</li>
-                <li><strong>Design Responsivo:</strong> Interface limpa desenvolvida especificamente para ecrãs de smartphones de produtores rurais.</li>
-                <li><strong>Economia de Recursos:</strong> Foco total na redução do desperdício de água em pequenas propriedades.</li>
-            </ul>
-        </div>
+        <main class="main-content">
+            <header class="main-header">
+                <div class="header-info">
+                    <h1>Monitoramento Volumétrico Estrutural</h1>
+                    <p>Rede de sensores IoT com transmissão via rádio de longo alcance (LoRa)</p>
+                </div>
+                <div class="system-status">
+                    <span class="status-pulse"></span>
+                    <span class="status-text">Rede Online</span>
+                </div>
+            </header>
 
-        <div class="section">
-            <h2>🛠️ Tecnologias Utilizadas</h2>
-            <h3>Hardware Proposto</h3>
-            <ul><li>Componentes: Arduino UNO, Sensor Higrómetro de Solo e Módulo Relé.</li></ul>
-            <h3>Software e Design</h3>
-            <ul><li>Linguagens e Estilos: HTML5 estrutural, CSS3 baseado em variáveis modernas, e lógica em JavaScript nativo.</li></ul>
-        </div>
+            <section class="kpi-section">
+                <div class="card uva">
+                    <div class="card-header">
+                        <span>UMIDADE - VITICULTURA</span>
+                        <span class="sector-tag">Setor Uva</span>
+                    </div>
+                    <div class="card-value" id="kpi-uva">--.-%</div>
+                    <p class="card-desc">Parâmetro ideal para maturação de videiras rústicas.</p>
+                </div>
 
-        <div class="section">
-            <h2>📦 Como Rodar o Projeto</h2>
-            <ol>
-                <li>Faça o clone do repositório: <span class="link-placeholder">[Link do Repositório]</span>.</li>
-                <li>Abra o ficheiro <span class="link-placeholder">index.html</span> em qualquer navegador web atualizado.</li>
-            </ol>
-        </div>
+                <div class="card cafe">
+                    <div class="card-header">
+                        <span>UMIDADE - CAFEICULTURA</span>
+                        <span class="sector-tag">Setor Café</span>
+                    </div>
+                    <div class="card-value" id="kpi-cafe">--.-%</div>
+                    <p class="card-desc">Garante a constância hídrica no pegamento da florada.</p>
+                </div>
 
-        <div class="section">
-            <h2>👥 Equipa</h2>
-            <ul>
-                <li><strong>[Seu Nome]</strong> - Engenharia de Software & CSS</li>
-                <li><strong>[Nome do Colega]</strong> - Hardware e Pesquisa de Campo</li>
-                <li><strong>[Professor]</strong> - Orientador / Mentor</li>
-            </ul>
-            <p><strong>Escola:</strong> [Nome da Escola / Colégio]</p>
-        </div>
+                <div class="card sustentabilidade">
+                    <div class="card-header">
+                        <span>PREVENÇÃO DE EROSÃO</span>
+                        <span class="sector-tag highlight">Estável</span>
+                    </div>
+                    <div class="card-value">94.8%</div>
+                    <p class="card-desc">Eficiência das curvas de nível contra o escoamento.</p>
+                </div>
+            </section>
 
-        <div class="footer">
-            📄 Desenvolvido com orgulho para o Concurso Pedagógico Agrinho.
-        </div>
+            <section class="analytics-section">
+                <div class="chart-container">
+                    <h3>Potencial Matricial e Histórico de Absorção</h3>
+                    <div class="canvas-wrapper">
+                        <canvas id="liveAgroChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="diagnostic-container">
+                    <h3>Diagnóstico de Campo</h3>
+                    
+                    <div class="diagnostic-item">
+                        <h5>Cobertura Morta Ativa</h5>
+                        <p>Evapotranspiração reduzida drasticamente entre as fileiras de plantio irrigado.</p>
+                    </div>
+
+                    <div class="diagnostic-item normal">
+                        <h5>Infiltração Profunda</h5>
+                        <p>Sensores a 40cm apontam percolação estável, sem riscos de lixiviação de nutrientes.</p>
+                    </div>
+
+                    <div class="agrinho-philosophy">
+                        <h5>Impacto Social e Educativo</h5>
+                        <p>Ao capacitar o pequeno produtor de Rosário do Ivaí com dados precisos, o programa Agrinho promove a autonomia tecnológica no campo, gerando conservação ambiental e fixação do jovem na propriedade familiar.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <script>
-        const LIMIAR_SECO = 35;       
-        const LIMIAR_IDEAL_MIN = 45;  
-        const LIMIAR_IDEAL_MAX = 75;
-
-        function analisarSolo(percentagemHumidade) {
-            let mensagem = "";
-            let classeCss = "";
-            let corBordaSuperior = "";
-
-            if (percentagemHumidade < LIMIAR_SECO) {
-                mensagem = "🚨 ALERTA: Solo muito seco! Ativar rega imediata.";
-                classeCss = "status-seco";
-                corBordaSuperior = "#d9534f"; // Vermelho
-            } else if (percentagemHumidade >= LIMIAR_IDEAL_MIN && percentagemHumidade <= LIMIAR_IDEAL_MAX) {
-                mensagem = "✅ Solo Saudável: Humidade ideal para cultivo.";
-                classeCss = "status-ideal";
-                corBordaSuperior = "#2b6e4c"; // Verde
-            } else if (percentagemHumidade > LIMIAR_IDEAL_MAX) {
-                mensagem = "⚠️ Atenção: Solo encharcado. Desligar sistemas.";
-                classeCss = "status-encharcado";
-                corBordaSuperior = "#5bc0de"; // Azul
-            } else {
-                mensagem = "💧 Humidade moderada. Monitorizar evolução.";
-                classeCss = "status-moderado";
-                corBordaSuperior = "#f0ad4e"; // Amarelo
-            }
-
-            return { texto: mensagem, classe: classeCss, corBorda: corBordaSuperior };
-        }
-
-        function atualizarPainel() {
-            // Simula uma flutuação real do sensor (15% a 95%)
-            const valorSensorSimulado = Math.floor(Math.random() * (95 - 15 + 1)) + 15;
-            const diagnostico = analisarSolo(valorSensorSimulado);
-
-            const elementoHumidade = document.getElementById("valor-humidade");
-            const elementoStatus = document.getElementById("status-mensagem");
-            const cardSensor = document.getElementById("card-sensor");
-
-            if (elementoHumidade && elementoStatus && cardSensor) {
-                // 1. Atualiza o valor numérico
-                elementoHumidade.innerText = valorSensorSimulado + "%";
-                
-                // 2. Altera o texto informativo
-                elementoStatus.innerText = diagnostico.texto;
-                
-                // 3. Limpa as classes antigas do CSS e injeta a nova classe correta
-                elementoStatus.className = ""; // limpa
-                elementoStatus.classList.add(diagnostico.classe);
-                
-                // 4. Altera dinamicamente a cor da linha superior do card
-                cardSensor.style.borderColor = diagnostico.corBorda;
-                elementoHumidade.style.color = diagnostico.corBorda;
-            }
-        }
-
-        // Inicialização
-        window.onload = function() {
-            atualizarPainel();
-            // Executa a atualização a cada 5 segundos de forma contínua
-            setInterval(atualizarPainel, 5000);
-        };
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>

@@ -1,73 +1,87 @@
-// 🌾 SCRIPT DE MONITORIZAÇÃO DE HUMIDADE - PROJETO AGRINHO 🌾
+document.addEventListener('DOMContentLoaded', () => {
+    const canvasContext = document.getElementById('liveAgroChart');
+    if (!canvasContext) return;
 
-// 1. Definição das configurações do solo (Limiares de humidade em %)
-const LIMIAR_SECO = 30;       // Abaixo de 30% o solo está demasiado seco
-const LIMIAR_IDEAL_MIN = 40;  // Entre 40% e 70% é a humidade ideal
-const LIMIAR_IDEAL_MAX = 70;
-
-/**
- * Função que analisa a humidade atual e gera o diagnóstico para o agricultor
- * @param {number} percentagemHumidade 
- * @returns {Object} Mensagem de alerta e a cor correspondente ao estado
- */
-function analisarSolo(percentagemHumidade) {
-    let mensagem = "";
-    let corStatus = "";
-
-    if (percentagemHumidade < LIMIAR_SECO) {
-        mensagem = "🚨 ALERTA: Solo muito seco! Ativar sistema de rega imediatamente.";
-        corStatus = "#d9534f"; // Vermelho
-    } else if (percentagemHumidade >= LIMIAR_IDEAL_MIN && percentagemHumidade <= LIMIAR_IDEAL_MAX) {
-        mensagem = "✅ Solo Saudável: A humidade está no nível ideal para o cultivo.";
-        corStatus = "#2b6e4c"; // Verde Agrinho
-    } else if (percentagemHumidade > LIMIAR_IDEAL_MAX) {
-        mensagem = "⚠️ Atenção: Solo encharcado. Risco de apodrecimento das raízes.";
-        corStatus = "#0275d8"; // Azul
-    } else {
-        mensagem = "💧 Humidade moderada. Monitorize a plantação.";
-        corStatus = "#f0ad4e"; // Amarelo/Laranja
-    }
-
-    return {
-        texto: mensagem,
-        cor: corStatus
+    // Configuração de dados históricos simulando telemetria de campo
+    const datasetConfig = {
+        labels: ['08:00', '10:00', '12:00', '14:00', '16:00', 'Leitura Atual'],
+        datasets: [
+            {
+                label: 'Setor de Videiras (Uva)',
+                data: [58.1, 57.4, 56.9, 59.2, 58.0, 58.7],
+                borderColor: '#bf5af2',
+                backgroundColor: 'rgba(191, 90, 242, 0.02)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true
+            },
+            {
+                label: 'Setor de Cafeicultura',
+                data: [65.0, 64.2, 63.8, 66.1, 65.4, 66.3],
+                borderColor: '#0a84ff',
+                backgroundColor: 'rgba(10, 132, 255, 0.02)',
+                borderWidth: 3,
+                tension: 0.4,
+                fill: true
+            }
+        ]
     };
-}
 
-/**
- * Função para atualizar a interface do utilizador (HTML) com os dados do sensor
- * (Assume que tens elementos com estes IDs no teu HTML)
- */
-function atualizarPainelDoAgricultor() {
-    // Simula a leitura de um sensor real (gera um valor aleatório entre 10% e 90%)
-    const valorSensorSimulado = Math.floor(Math.random() * (90 - 10 + 1)) + 10;
-    
-    // Executa a análise dos dados
-    const diagnostico = analisarSolo(valorSensorSimulado);
+    // Opções de estilização interna do Chart.js
+    const chartSettings = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                labels: {
+                    color: '#94a3b8',
+                    font: { family: 'Plus Jakarta Sans', size: 12, weight: '500' }
+                }
+            }
+        },
+        scales: {
+            y: {
+                grid: { color: 'rgba(255, 255, 255, 0.04)' },
+                ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans' } }
+            },
+            x: {
+                grid: { display: false },
+                ticks: { color: '#94a3b8', font: { family: 'Plus Jakarta Sans' } }
+            }
+        }
+    };
 
-    // Procura os elementos na página HTML para atualizar os textos
-    const elementoHumidade = document.getElementById("valor-humidade");
-    const elementoStatus = document.getElementById("status-mensagem");
+    // Instancia o gráfico global
+    const agroChartInstance = new Chart(canvasContext.getContext('2d'), {
+        type: 'line',
+        data: datasetConfig,
+        options: chartSettings
+    });
 
-    // Verifica se os elementos existem na página antes de alterar
-    if (elementoHumidade && elementoStatus) {
-        elementoHumidade.innerText = valorSensorSimulado + "%";
-        elementoStatus.innerText = diagnostico.texto;
-        elementoStatus.style.color = diagnostico.cor;
-        
-        console.log(`[Sensor] Leitura efetuada: ${valorSensorSimulado}% - ${diagnostico.texto}`);
-    } else {
-        // Caso os IDs ainda não existam no HTML, mostra apenas no painel de programador (Consola)
-        console.log("--- Painel de Monitorização Agrinho ---");
-        console.log(`Humidade do Solo: ${valorSensorSimulado}%`);
-        console.log(`Status: ${diagnostico.texto}`);
+    // Função de variação algorítmica para simular dados dinâmicos em tempo real
+    function atualizarSensoresCampo() {
+        const simulaUva = (Math.random() * (61.2 - 56.5) + 56.5).toFixed(1);
+        const simulaCafe = (Math.random() * (68.5 - 63.2) + 63.2).toFixed(1);
+
+        // Injeta os novos valores nos elementos de exibição numérica do HTML
+        const uiUva = document.getElementById('kpi-uva');
+        const uiCafe = document.getElementById('kpi-cafe');
+
+        if (uiUva) uiUva.innerText = `${simulaUva}%`;
+        if (uiCafe) uiCafe.innerText = `${simulaCafe}%`;
+
+        // Modifica a última posição do array de dados do gráfico para gerar movimento
+        agroChartInstance.data.datasets[0].data.shift();
+        agroChartInstance.data.datasets[0].data.push(parseFloat(simulaUva));
+
+        agroChartInstance.data.datasets[1].data.shift();
+        agroChartInstance.data.datasets[1].data.push(parseFloat(simulaCafe));
+
+        // Atualiza a interface gráfica de forma otimizada sem recarregar a página
+        agroChartInstance.update('none');
     }
-}
 
-// Executa a função automaticamente assim que a página terminar de carregar
-window.onload = function() {
-    atualizarPainelDoAgricultor();
-    
-    // Atualiza a leitura automaticamente a cada 5 segundos para simular tempo real
-    setInterval(atualizarPainelDoAgricultor, 5000);
-};
+    // Inicializa a primeira leitura e define o intervalo de atualização para 4 segundos
+    atualizarSensoresCampo();
+    setInterval(atualizarSensoresCampo, 4000);
+});
