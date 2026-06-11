@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AgroSustentável Pro</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background: #f4f7f6;
+    color: #333;
+}
+
+/* ===== CAPA (HERO) ===== */
+.hero {
+    height: 100vh;
+    background: url('https://images.unsplash.com/photo-1581091012184-83982b116ff5?auto=format&fit=crop&w=1470&q=80') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    position: relative;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(46,125,50,0.6);
+}
+
+.hero-content {
+    position: relative;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.hero h1 {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 20px;
+    opacity: 0.9;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+/* ===== GRID ===== */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+@media(max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+}
+
+/* ===== CARDS ===== */
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+h2 {
+    color: #2e7d32;
+    margin-bottom: 20px;
+}
+
+/* ===== FORM ===== */
+label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+select, input[type="range"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 18px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1b5e20;
+}
+
+/* ===== RESULTADOS ===== */
+.result {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.box {
+    background: #f6f9f7;
+    padding: 18px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.big {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2e7d32;
+}
+
+/* ===== BARRA ===== */
+.bar {
+    height: 10px;
+    background: #ddd;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.fill {
+    height: 100%;
+    background: #2e7d32;
+}
+
+/* ===== TABELA ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 40px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+}
+
+table th {
+    background: #2e7d32;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background: #f6f9f7;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    text-align: center;
+    padding: 25px;
+    background: #111;
+    color: white;
+    margin-top: 60px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== CAPA ===== -->
+<section class="hero">
+    <div class="hero-content">
+        <h1>🌾 AgroSustentável Pro</h1>
+        <p>Sistema inteligente de simulação agrícola para produtividade e sustentabilidade</p>
+    </div>
+</section>
+
+<!-- ===== CONTEÚDO ===== -->
+<div class="container">
+
+<div class="grid">
+
+    <!-- CONTROLES -->
+    <div class="card">
+        <h2>🌱 Simulação Agrícola</h2>
+
+        <label>Cultura</label>
+        <select id="cultura">
+            <option value="soja">Soja</option>
+            <option value="milho">Milho</option>
+            <option value="cafe">Café</option>
+            <option value="trigo">Trigo</option>
+            <option value="algodao">Algodão</option>
+        </select>
+
+        <label>Clima</label>
+        <select id="clima">
+            <option value="ideal">Ideal</option>
+            <option value="seca">Seca</option>
+            <option value="chuva">Chuva intensa</option>
+        </select>
+
+        <label>Irrigação</label>
+        <select id="irrigacao">
+            <option value="nenhuma">Nenhuma</option>
+            <option value="gotejamento">Gotejamento</option>
+            <option value="aspersao">Aspersão</option>
+        </select>
+
+        <label>Fertilizante (%)</label>
+        <input type="range" id="fert" min="0" max="100" value="50">
+        <p id="val">50%</p>
+
+        <button onclick="simular()">Executar Simulação</button>
+    </div>
+
+    <!-- RESULTADOS -->
+    <div class="card">
+        <h2>📊 Indicadores</h2>
+
+        <div class="result">
+            <div class="box">
+                <p>Produtividade</p>
+                <div class="big" id="prod">50%</div>
+                <div class="bar"><div id="barProd" class="fill" style="width:50%"></div></div>
+            </div>
+
+            <div class="box">
+                <p>Solo</p>
+                <div class="big" id="solo">60%</div>
+                <div class="bar"><div id="barSolo" class="fill" style="width:60%"></div></div>
+            </div>
+
+            <div class="box">
+                <p>CO₂</p>
+                <div class="big" id="carbono">5</div>
+            </div>
+
+            <div class="box">
+                <p>ESG</p>
+                <div class="big" id="esg">B</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ===== TABELA ===== -->
+<h2 style="margin-top:50px; color:#2e7d32;">☀️ Clima Ideal para Culturas</h2>
+
+<table>
+    <tr>
+        <th>Cultura</th>
+        <th>Temperatura</th>
+        <th>Chuva</th>
+        <th>Observação</th>
+    </tr>
+    <tr>
+        <td>Soja</td>
+        <td>20–30°C</td>
+        <td>80–120 mm</td>
+        <td>Solo bem drenado</td>
+    </tr>
+    <tr>
+        <td>Milho</td>
+        <td>18–28°C</td>
+        <td>90–150 mm</td>
+        <td>Evitar encharcamento</td>
+    </tr>
+    <tr>
+        <td>Café</td>
+        <td>16–24°C</td>
+        <td>100–200 mm</td>
+        <td>Meia sombra</td>
+    </tr>
+    <tr>
+        <td>Trigo</td>
+        <td>12–22°C</td>
+        <td>50–100 mm</td>
+        <td>Clima seco na colheita</td>
+    </tr>
+</table>
+
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+    © 2026 AgroSustentável Pro - Todos os direitos reservados
+</footer>
+
+<!-- ===== SCRIPT ===== -->
+<script>
+document.getElementById("fert").addEventListener("input", e=>{
+    document.getElementById("val").innerText = e.target.value + "%";
+});
+
+function simular(){
+    let prod = 50;
+    let solo = 60;
+    let carbono = 5;
+    let esg = "B";
+
+    let fert = parseInt(document.getElementById("fert").value);
+    let clima = document.getElementById("clima").value;
+    let irr = document.getElementById("irrigacao").value;
+
+    carbono += (fert - 50) * 0.5;
+
+    if(fert > 70){ prod += 15; solo -= 10; carbono += 10; }
+    else if(fert < 30){ prod -= 8; solo += 8; carbono -= 5; }
+
+    if(clima == "seca"){ prod -= 10; solo -= 7; carbono += 4; }
+    if(clima == "chuva"){ prod += 4; solo -= 4; carbono += 2; }
+
+    if(irr == "gotejamento"){ prod += 12; solo += 10; carbono -= 6; }
+    if(irr == "aspersao"){ prod += 7; solo -= 6; carbono += 5; }
+
+    prod = Math.max(0, Math.min(100, prod));
+    solo = Math.max(0, Math.min(100, solo));
+
+    document.getElementById("prod").innerText = prod + "%";
+    document.getElementById("solo").innerText = solo + "%";
+    document.getElementById("carbono").innerText = carbono.toFixed(1);
+
+    if(prod > 80 && solo > 80) esg = "A+";
+    else if(prod > 65) esg = "A";
+    else if(prod > 50) esg = "B+";
+    else esg = "B";
+
+    document.getElementById("esg").innerText = esg;
+
+    document.getElementById("barProd").style.width = prod + "%";
+    document.getElementById("barSolo").style.width = solo + "%";
+}
+</script>
+
+</body>
+</html>
