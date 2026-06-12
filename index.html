@@ -3,100 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGRO-PRECI | Inteligência Artificial e IoT</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Central Agro-Preci IA | Agrinho 2026</title>
+    <!-- Importação do Chart.js para os Gráficos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="popup-alerta" class="alert-popup hidden">
-        <div class="popup-content">
-            <span class="popup-icon">⚡</span>
-            <div class="popup-text">
-                <strong id="popup-titulo">ALERTA PREDITIVO IA</strong>
-                <p id="popup-mensagem">Mensagem de telemetria base.</p>
-            </div>
-            <button id="btn-fechar-popup" class="popup-close">✕</button>
-        </div>
-    </div>
-
-    <div class="app-container">
+    <div class="dashboard-container">
         
+        <!-- SIDEBAR - BARRA LATERAL DE NAVEGAÇÃO -->
         <aside class="sidebar">
-            <div class="sidebar-top">
-                
-                <div class="brand" style="display: flex; align-items: center; gap: 14px; margin-bottom: 30px;">
-                    <div style="width: 44px; height: 44px; border-radius: 10px; background: rgba(46, 204, 113, 0.15); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(46, 204, 113, 0.2); flex-shrink: 0;">
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M2 22C2.5 18 5.5 14.5 9.5 13.5C13.5 12.5 16.5 9 17 5M17 5C14.5 5 11 7 9 10C7 13 7.5 16.5 7.5 16.5M17 5C19 6.5 21 9.5 21 13.5C21 17.5 17 20 13 20C9 20 7.5 16.5 7.5 16.5M7.5 16.5L3 21" stroke="#2ecc71" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <div class="brand-text">
-                        <h3 style="margin: 0; font-size: 16px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px;">AGRO-PRECI <span style="color: #2ecc71;">IA</span></h3>
-                        <span style="font-size: 10px; color: #a0aec0; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;">Rosário do Ivaí</span>
-                    </div>
+            <div id="sidebar-top-container">
+                <div class="brand">
+                    <h2>AGRO-PRECI <span class="badge-ia">IA</span></h2>
+                    <p>Sustentabilidade Tecnológica</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#" class="active">📊 Dashboard Geral</a>
+                <a href="#map-label">🗺️ Mapa Satélite</a>
+                <a href="#chat-box">🤖 AgroBot Chat</a>
+            </nav>
+
+            <!-- Rodapé institucional para o Agrinho -->
+            <div class="sidebar-footer">
+                <p><strong>Projeto Agrinho 2026</strong></p>
+                <p>Rosário do Ivaí - PR</p>
+            </div>
+        </aside>
+
+        <!-- CONTEÚDO PRINCIPAL DO PAINEL -->
+        <main class="main-content">
+            
+            <!-- CABEÇALHO SUPERIOR -->
+            <header class="main-header">
+                <div class="header-title">
+                    <h1>Painel de Monitoramento de Precisão</h1>
+                    <p>Gêmeo Digital e Controle IoT da Encosta Hidro-Responsiva</p>
                 </div>
                 
-                <div class="control-group">
-                    <label class="control-label">📡 Monitoramento por Cultura</label>
-                    <select id="select-cultura" class="modern-select">
-                        <option value="todos">Todos os Setores Ativos</option>
+                <!-- MONITORAMENTO POR CULTURA (DROPDOWN CORRIGIDO) -->
+                <div class="culture-selector-box">
+                    <label for="select-cultura">📡 Monitoramento por Cultura:</label>
+                    <select id="select-cultura">
+                        <option value="todos">Exibir Todas as Culturas</option>
                         <option value="uva">Setor Sul - Uva Niágara</option>
                         <option value="cafe">Setor Norte - Café Adensado</option>
                     </select>
                 </div>
-
-                <div class="control-group">
-                    <label class="control-label">🌤️ Central Matrix Climática</label>
-                    <div class="btn-group-clima">
-                        <button class="btn-clima active" id="btn-clima-normal">Estável</button>
-                        <button class="btn-clima" id="btn-clima-chuva">Nordeste 🌧️</button>
-                        <button class="btn-clima" id="btn-clima-seca">Gradiente ☀️</button>
-                    </div>
-                </div>
-
-            </div>
-            
-            <div class="sidebar-footer">
-                <span class="agrinho-badge">AGRINHO 2026</span>
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <header class="main-header">
-                <div class="header-info">
-                    <h1>Matriz de Engenharia Preditiva</h1>
-                    <p>Mapeamento de sensores IoT de alta precisão integrados a redes computacionais e modelos preditivos de solo.</p>
-                </div>
             </header>
 
-            <section class="kpi-section">
-                <div class="card uva-card">
-                    <div class="card-header"><span>UMIDADE - VITICULTURA</span><span class="sector-tag">Uva</span></div>
-                    <div class="card-value" id="kpi-uva">58.7%</div>
-                    <p class="card-desc">Análise volumétrica ideal para o bago.</p>
+            <!-- CENTRAL MATRIX CLIMÁTICA -->
+            <section class="climate-matrix-container">
+                <div class="matrix-header">
+                    <h4>🌤️ Central Matrix Climática (Simulador Atmosférico)</h4>
+                    <p>Altere o estado climático para validar a resposta automatizada dos sensores da fazenda</p>
                 </div>
-                
-                <div class="card cafe-card">
-                    <div class="card-header"><span>UMIDADE - CAFEICULTURA</span><span class="sector-tag">Café</span></div>
-                    <div class="card-value" id="kpi-cafe">66.3%</div>
-                    <p class="card-desc">Padrão hídrico calibrado para floração.</p>
-                </div>
-                
-                <div class="card sustentabilidade">
-                    <div class="card-header"><span>ESTABILIDADE DA ENCOSTA</span><span class="sector-tag highlight" id="kpi-status-tag">Excelente</span></div>
-                    <div class="card-value" id="kpi-absorcao">94.8%</div>
-                    <p class="card-desc">Drenagem ativa mitigando escoamento linear.</p>
+                <div class="matrix-buttons">
+                    <button id="btn-clima-normal" class="matrix-btn active">☀️ Gradiente Estável (Padrão)</button>
+                    <button id="btn-clima-chuva" class="matrix-btn">🌧️ Precipitação Nordeste (Tempestade)</button>
+                    <button id="btn-clima-seca" class="matrix-btn">🌵 Estresse Hídrico (Seca)</button>
                 </div>
             </section>
 
+            <!-- LINHA DE CARDS DE KPI (TELEMETRIA EM TEMPO REAL) -->
+            <section class="kpi-grid">
+                
+                <!-- CARD UVA NIÁGARA -->
+                <div class="kpi-card uva-card">
+                    <div class="kpi-header">
+                        <span class="icon">🍇</span>
+                        <span class="kpi-title">Setor Sul - Uva Niágara</span>
+                    </div>
+                    <div class="kpi-body">
+                        <h2 id="kpi-uva">58.7%</h2>
+                        <p>Umidade Média do Solo</p>
+                    </div>
+                    <div class="kpi-footer-status">
+                        <span class="status-indicator online"></span> LoRaWAN Sinal Ativo
+                    </div>
+                </div>
+
+                <!-- CARD CAFÉ ADENSADO -->
+                <div class="kpi-card cafe-card">
+                    <div class="kpi-header">
+                        <span class="icon">☕</span>
+                        <span class="kpi-title">Setor Norte - Café Adensado</span>
+                    </div>
+                    <div class="kpi-body">
+                        <h2 id="kpi-cafe">66.3%</h2>
+                        <p>Umidade Média do Solo</p>
+                    </div>
+                    <div class="kpi-footer-status">
+                        <span class="status-indicator online"></span> LoRaWAN Sinal Ativo
+                    </div>
+                </div>
+
+                <!-- CARD MONITORAMENTO DE ENCOSTA (ESTABILIDADE) -->
+                <div class="kpi-card encosta-card">
+                    <div class="kpi-header">
+                        <span class="icon">⛰️</span>
+                        <span class="kpi-title">Estabilidade da Encosta</span>
+                        <span class="tag-status" id="kpi-status-tag">Excelente</span>
+                    </div>
+                    <div class="kpi-body">
+                        <h2 id="kpi-absorcao">94.8%</h2>
+                        <p>Taxa de Absorção de Água</p>
+                    </div>
+                    <div class="kpi-footer-status" id="kpi-desc-encosta">
+                        Drenagem ativa mitigando escoamento linear.
+                    </div>
+                </div>
+            </section>
+
+            <!-- SEÇÃO DE GRÁFICO TELEMÉTRICO -->
+            <section class="chart-section">
+                <div class="box-header-tech">
+                    <h3>📈 Telemetria de Umidade Hidro-Responsiva (Atualização 3s)</h3>
+                </div>
+                <div class="chart-wrapper">
+                    <canvas id="liveAgroChart"></canvas>
+                </div>
+            </section>
+
+            <!-- BLOCO INTERATIVO INTERMEDIÁRIO -->
             <section class="middle-features-grid">
                 
+                <!-- ZONEAMENTO ÓPTICO / SATÉLITE -->
                 <div class="feature-box">
                     <div class="box-header-tech">
                         <h3>🗺️ Telemetria Óptica Orbital</h3>
@@ -106,35 +141,53 @@
                         <div class="map-overlay" id="map-target"></div>
                         <span class="map-indicator" id="map-label">Mapeamento NDVI Ativo</span>
                     </div>
+                    
+                    <!-- BOTÃO DO GUIA SUSTENTÁVEL ESG -->
+                    <button id="btn-abrir-esg" class="reply-btn" style="width: 100%; margin-top: 15px; font-size: 12px; background: rgba(46, 204, 113, 0.15); border-color: var(--primary); color: #2ecc71;">🌱 Abrir Manual ESG: Manejo de Encostas</button>
                 </div>
 
+                <!-- PAINEL DE ATUADORES REMOTOS (IoT) -->
                 <div class="feature-box">
                     <div class="box-header-tech">
                         <h3>⚙️ Painel de Atuadores Remotos (IoT)</h3>
                     </div>
                     <div class="actuator-row">
                         <div><h5>Motobomba Uva</h5><span class="actuator-status" id="status-bomba-uva" style="color: #e74c3c; font-weight: bold;">DESLIGADO</span></div>
-                        <label class="switch"><input type="checkbox" id="switch-uva" onchange="alternarAtuador('switch-uva', 'status-bomba-uva', 'Motobomba de Uva')"><span class="slider round"></span></label>
+                        <label class="switch"><input type="checkbox" id="switch-uva"><span class="slider round"></span></label>
                     </div>
                     <div class="actuator-row">
                         <div><h5>Aspersor Café</h5><span class="actuator-status" id="status-bomba-cafe" style="color: #e74c3c; font-weight: bold;">DESLIGADO</span></div>
-                        <label class="switch"><input type="checkbox" id="switch-cafe" onchange="alternarAtuador('switch-cafe', 'status-bomba-cafe', 'Aspersor de Café')"><span class="slider round"></span></label>
+                        <label class="switch"><input type="checkbox" id="switch-cafe"><span class="slider round"></span></label>
                     </div>
                     <div class="actuator-row Context-Drain">
                         <div><h5>Drenagem Automatizada</h5><span class="actuator-status" id="status-drenagem" style="color: #e74c3c; font-weight: bold;">FECHADO</span></div>
-                        <label class="switch"><input type="checkbox" id="switch-drenagem" onchange="alternarDrenagem()"><span class="slider round"></span></label>
+                        <label class="switch"><input type="checkbox" id="switch-drenagem"><span class="slider round"></span></label>
                     </div>
                     
+                    <!-- SISTEMA VANT (DRONE) -->
                     <div class="actuator-row drone-control" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px;">
                         <div><h5>VANT Mapeamento Aéreo</h5><span class="actuator-status" id="status-drone" style="color: #a0aec0; font-weight: bold;">Hangar</span></div>
-                        <button id="btn-voot-drone" class="reply-btn" onclick="dispararDrone()" style="padding: 6px 12px; font-size: 11px; width: auto; margin-top: 0; font-weight: 700; border-radius: 6px; cursor: pointer;">Executar Missão</button>
+                        <button id="btn-voot-drone" class="reply-btn" style="padding: 6px 12px; font-size: 11px; width: auto; margin-top: 0; font-weight: 700; border-radius: 6px; cursor: pointer;">Executar Missão</button>
                     </div>
                 </div>
 
+                <!-- ESPAÇO DO PRODUTOR LOCAL E ECONOMIA CIRCULAR -->
                 <div class="feature-box">
                     <div class="box-header-tech">
-                        <h3>📊 Modelagem de Economia Circular</h3>
+                        <h3>🌾 Espaço do Produtor & Economia</h3>
                     </div>
+                    
+                    <!-- Cotações Locais Cooperativas -->
+                    <div class="cotacoes-container" style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px dashed rgba(255,255,255,0.1);">
+                        <span class="calc-label" style="font-size: 9px; color: var(--accent);">📊 Cotação Cooperativas Rosário do Ivaí</span>
+                        <div style="display: flex; justify-content: space-between; margin-top: 6px; font-size: 12px;">
+                            <span>Uva Niágara (cx 8kg):</span> <strong style="color: #2ecc71;">R$ 64,50</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 4px; font-size: 12px;">
+                            <span>Café Beneficiado (sc 60kg):</span> <strong style="color: #2ecc71;">R$ 1.420,00</strong>
+                        </div>
+                    </div>
+
                     <p class="calc-text">Área da Propriedade Analisada:</p>
                     <div class="calc-input-group">
                         <input type="number" id="input-hectares" value="2" min="1">
@@ -148,122 +201,66 @@
                         💧 <span id="txt-litros-salvos">Recurso hídrico poupado: <strong>24.000 Litros</strong>/mês</span>
                     </div>
 
+                    <!-- SLIDER DE PRECIPITAÇÃO INTERATIVO -->
                     <div class="fertilizer-calculator" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 14px;">
-                        <p class="calc-text" style="margin-bottom: 8px;">Simular Intensidade de Precipitação (Lixiviação):</p>
+                        <p class="calc-text" style="margin-bottom: 8px;">Simular Intensidade de Precipitação:</p>
                         <input type="range" id="slider-chuva-adubo" min="0" max="100" value="20" style="width: 100%; accent-color: #2ecc71;">
                         <div class="calc-result" style="margin-top: 10px; padding: 8px; border-radius: 6px; background: rgba(0,0,0,0.15);">
                             <span class="calc-label" style="font-size: 10px; text-transform: uppercase;">Perda NPK Evitada com IA:</span>
-                            <span id="txt-perda-adubo" style="color: #e74c3c; font-weight: 700; font-size: 13px;">4.0 kg por hectare</span>
+                            <span id="txt-perda-adubo" style="color: #2ecc71; font-weight: 700; font-size: 13px;">4.0 kg por hectare</span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section class="bottom-intelligence-grid">
-                
-                <div class="chart-container">
-                    <h3>Análise Computacional de Tendência <span class="ai-tag">Modelo Preditivo Ativo</span></h3>
-                    <div class="canvas-wrapper"><canvas id="liveAgroChart"></canvas></div>
+            <!-- SEÇÃO INTEGRADA: AGROBOT CHATBOT -->
+            <section class="bot-section">
+                <div class="box-header-tech">
+                    <h3>🤖 Consultoria Cognitiva AgroBot</h3>
                 </div>
-                
-                <div class="diagnostic-container">
-                    <h3>Cognição AgroBot Diagnóstico</h3>
-                    <div class="hardware-status-grid">
-                        <div class="hw-item">📡 Barramento LoRa: <strong>-68 dBm</strong> <small class="good">Excelente</small></div>
-                        <div class="hw-item">🔋 Célula de Carga Nó: <strong>92%</strong> <small class="good">Fotovoltaica</small></div>
-                    </div>
-                    <div class="chatbot-wrapper">
-                        <div class="chat-messages" id="chat-box">
-                            <div class="message system">Terminal AgroBot iniciado. Selecione um vetor de consulta estruturado para análise do relevo e solo de Rosário do Ivaí.</div>
-                        </div>
-                        <div class="chat-quick-replies">
-                            <button class="reply-btn" data-question="uva">Análise de Fitossanidade</button>
-                            <button class="reply-btn" data-question="relevo">Estudo Topográfico</button>
-                            <button class="reply-btn" data-question="lora">Infraestrutura LoRaWAN</button>
+                <div class="chat-container">
+                    <div class="chat-box" id="chat-box">
+                        <div class="message system">
+                            🤖 <strong>AgroBot:</strong> Olá! Sou o assistente cognitivo da Agro-Preci IA. Escolha uma das pautas rápidas abaixo para analisar dados agronômicos da região de Rosário do Ivaí:
                         </div>
                     </div>
-
-                    <div class="export-report-zone" style="margin-top: 15px;">
-                        <button id="btn-gerar-relatorio" class="btn-action" style="background: linear-gradient(135deg, #2ecc71, #27ae60); width: 100%; padding: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-radius: 8px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.15); border: none; color: white; cursor: pointer;">📊 Autenticar Relatório de Conformidade Ambiental</button>
+                    <div class="chat-quick-replies">
+                        <button class="reply-btn-chat" data-question="uva">🍇 Diagnóstico de Viticultura</button>
+                        <button class="reply-btn-chat" data-question="relevo">⛰️ Análise Topográfica de Encostas</button>
+                        <button class="reply-btn-chat" data-question="lora">📡 Teste de Sinal Rede LoRaWAN</button>
                     </div>
                 </div>
             </section>
+
+            <!-- REQUISITO AGRINHO: CERTIFICAÇÃO AMBIENTAL -->
+            <footer class="dashboard-footer-action">
+                <div class="footer-badge-text">
+                    <h4>Conformidade ESG e Pegada Hidrológica Reversa</h4>
+                    <p>Esta plataforma valida os critérios ecológicos exigidos pelo Regulamento de Sustentabilidade do Selo Verde Paraná.</p>
+                </div>
+                <button class="btn-primary" id="btn-gerar-relatorio">Autenticar Relatório Verde</button>
+            </footer>
+
         </main>
     </div>
 
-    <div id="log-alertas" style="display: none;"></div>
+    <!-- POPUP MODAL PARA ALERTAS DA IA E RELATÓRIO -->
+    <div id="popup-alerta" class="popup-overlay hidden">
+        <div class="popup-card">
+            <div class="popup-header">
+                <span class="popup-icon">🔔</span>
+                <h3 id="popup-titulo">Notificação do Sistema</h3>
+            </div>
+            <div class="popup-body">
+                <p id="popup-mensagem">Mensagem interna da inteligência artificial.</p>
+            </div>
+            <div class="popup-footer">
+                <button id="btn-fechar-popup" class="btn-popup-close">Entendido</button>
+            </div>
+        </div>
+    </div>
 
-    <script>
-        // Função genérica para ligar/desligar Motobomba e Aspersor
-        function alternarAtuador(switchId, statusId, nomeAtuador) {
-            const checkbox = document.getElementById(switchId);
-            const statusTxt = document.getElementById(statusId);
-            
-            if (checkbox.checked) {
-                statusTxt.innerText = "LIGADO";
-                statusTxt.style.color = "#2ecc71"; // Verde
-                mostrarPopup("IoT INFO", `${nomeAtuador} ativado com sucesso via comando de malha.`);
-            } else {
-                statusTxt.innerText = "DESLIGADO";
-                statusTxt.style.color = "#e74c3c"; // Vermelho
-                mostrarPopup("IoT INFO", `${nomeAtuador} desligado remotamente.`);
-            }
-        }
-
-        // Função específica para a Drenagem
-        function alternarDrenagem() {
-            const checkbox = document.getElementById('switch-drenagem');
-            const statusTxt = document.getElementById('status-drenagem');
-            
-            if (checkbox.checked) {
-                statusTxt.innerText = "ABERTO";
-                statusTxt.style.color = "#2ecc71";
-                mostrarPopup("SISTEMA DE SEGURANÇA", "Comportas de drenagem abertas para escoamento do relevo.");
-            } else {
-                statusTxt.innerText = "FECHADO";
-                statusTxt.style.color = "#e74c3c";
-                mostrarPopup("SISTEMA DE SEGURANÇA", "Comportas de drenagem fechadas e retidas.");
-            }
-        }
-
-        // Função para simular a decolagem do Drone/VANT
-        function dispararDrone() {
-            const statusTxt = document.getElementById('status-drone');
-            const btn = document.getElementById('btn-voot-drone');
-            
-            statusTxt.innerText = "EM MISSÃO ✈️";
-            statusTxt.style.color = "#3498db"; // Azul
-            btn.disabled = true;
-            btn.innerText = "Voando...";
-            btn.style.opacity = "0.5";
-            
-            mostrarPopup("VANT SATELLITE", "Drone decolou para mapeamento NDVI e análise fotogramétrica das encostas.");
-
-            // Após 6 segundos ele simula o retorno ao hangar automaticamente
-            setTimeout(() => {
-                statusTxt.innerText = "Hangar";
-                statusTxt.style.color = "#a0aec0";
-                btn.disabled = false;
-                btn.innerText = "Executar Missão";
-                btn.style.opacity = "1";
-                mostrarPopup("VANT SATELLITE", "Missão concluída. Dados ópticos descarregados no Kernel IA.");
-            }, 6000);
-        }
-
-        // Função auxiliar para reaproveitar a janela de popup de alertas que você já tem na tela
-        function mostrarPopup(titulo, mensagem) {
-            const popup = document.getElementById('popup-alerta');
-            document.getElementById('popup-titulo').innerText = titulo;
-            document.getElementById('popup-mensagem').innerText = mensagem;
-            popup.classList.remove('hidden');
-        }
-
-        // Configuração do botão de fechar o popup nativo
-        document.getElementById('btn-fechar-popup').addEventListener('click', () => {
-            document.getElementById('popup-alerta').classList.add('hidden');
-        });
-    </script>
-
+    <!-- Inclusão do arquivo JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
