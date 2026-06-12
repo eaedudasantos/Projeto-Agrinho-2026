@@ -1,166 +1,254 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const canvasContext = document.getElementById('liveAgroChart');
-    if (!canvasContext) return;
-
-    let climaAtivo = 'normal'; 
-    let alertasAtivados = false;
-
-    // Dados de simulação baseados nas necessidades de Rosário do Ivaí
-    const baseLabels = ['10:00', '12:00', '14:00', '16:00', 'Agora', '+2h Projeção (IA)'];
-    const dadosNormais = { uva: [58, 57, 56, 59, 58, 57.5], cafe: [65, 64, 63, 66, 65, 64.2] };
-    const dadosChuva = { uva: [58, 57, 68, 79, 82, 88.0], cafe: [65, 64, 73, 81, 84, 91.5] };
-    const dadosSeca = { uva: [58, 52, 47, 43, 39, 32.1], cafe: [65, 61, 55, 51, 46, 38.0] };
-
-    // Inicialização do Gráfico (Chart.js) com design customizado
-    const agroChartInstance = new Chart(canvasContext.getContext('2d'), {
+document.addEventListener("DOMContentLoaded", () => {
+    // ==========================================
+    // INSTANCIAÇÃO DO GRÁFICO (Chart.js)
+    // ==========================================
+    const ctx = document.getElementById('liveAgroChart').getContext('2d');
+    const liveChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: baseLabels,
+            labels: ['10s atrás', '8s atrás', '6s atrás', '4s atrás', '2s atrás', 'Agora'],
             datasets: [
-                { 
-                    label: 'Uva Niágara', 
-                    data: [...dadosNormais.uva], 
-                    borderColor: '#bf5af2', 
-                    backgroundColor: 'transparent', 
-                    borderWidth: 3, 
-                    tension: 0.3, 
-                    segment: { borderDash: ctx => ctx.p1DataIndex === 5 ? [6, 6] : undefined } 
+                {
+                    label: 'Umidade Uva (%)',
+                    data: [59, 58.5, 59, 58.2, 58.8, 58.7],
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    tension: 0.4,
+                    fill: true
                 },
-                { 
-                    label: 'Café Adensado', 
-                    data: [...dadosNormais.cafe], 
-                    borderColor: '#0a84ff', 
-                    backgroundColor: 'transparent', 
-                    borderWidth: 3, 
-                    tension: 0.3, 
-                    segment: { borderDash: ctx => ctx.p1DataIndex === 5 ? [6, 6] : undefined } 
+                {
+                    label: 'Umidade Café (%)',
+                    data: [65, 65.8, 66, 66.2, 66.1, 66.3],
+                    borderColor: '#e67e22',
+                    backgroundColor: 'rgba(230, 126, 34, 0.1)',
+                    tension: 0.4,
+                    fill: true
                 }
             ]
         },
-        options: { 
-            responsive: true, 
-            maintainAspectRatio: false, 
-            plugins: { legend: { labels: { color: '#94a3b8', font: { weight: '600' } } } }, 
-            scales: { 
-                y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#94a3b8' } }, 
-                x: { grid: { display: false }, ticks: { color: '#94a3b8' } } 
-            } 
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { labels: { color: '#ffffff', font: { family: 'Plus Jakarta Sans' } } }
+            },
+            scales: {
+                y: { min: 20, max: 100, grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: '#a0aec0' } },
+                x: { grid: { display: false }, ticks: { color: '#a0aec0' } }
+            }
         }
     });
 
-    // Banco de respostas do AgroBot Inteligente
+    // Simulador de dados em tempo real (atualiza o gráfico a cada 3 segundos)
+    setInterval(() => {
+        liveChart.data.datasets[0].data.shift();
+        liveChart.data.datasets[1].data.shift();
+
+        // Flutuação leve baseada nos valores atuais da tela
+        let baseUva = parseFloat(document.getElementById('kpi-uva').innerText);
+        let baseCafe = parseFloat(document.getElementById('kpi-cafe').innerText);
+
+        liveChart.data.datasets[0].data.push(+(baseUva + (Math.random() * 2 - 1)).toFixed(1));
+        liveChart.data.datasets[1].data.push(+(baseCafe + (Math.random() * 2 - 1)).toFixed(1));
+        liveChart.update();
+    }, 3000);
+
+
+    // ==========================================
+    // SIMULADOR DE CLIMA INTERATIVO E HISTÓRICO
+    // ==========================================
+    const btnNormal = document.getElementById('btn-clima-normal');
+    const btnChuva = document.getElementById('btn-clima-chuva');
+    const btnSeca = document.getElementById('btn-clima-seca');
+
+    const kpiUva = document.getElementById('kpi-uva');
+    const kpiCafe = document.getElementById('kpi-cafe');
+    const kpiAbsorcao = document.getElementById('kpi-absorcao');
+    const kpiStatusTag = document.getElementById('kpi-status-tag');
+    
+    const popup = document.getElementById('popup-alerta');
+    const popupTitulo = document.getElementById('popup-titulo');
+    const popupMsg = document.getElementById('popup-mensagem');
+    const logAlertas = document.getElementById('log-alertas');
+    const statusDrenagem = document.getElementById('status-drenagem');
+
+    function limparClimaAtivo() {
+        [btnNormal, btnChuva, btnSeca].forEach(b => b.classList.remove('active'));
+    }
+
+    function adicionarLog(mensagem, tipo) {
+        const hora = new Date().toLocaleTimeString();
+        let classe = 'system';
+        if (tipo === 'alerta') classe = 'alert';
+        if (tipo === 'perigo') classe = 'danger';
+        
+        logAlertas.innerHTML += `<div class="log-item ${classe}">[${hora}] ${mensagem}</div>`;
+        logAlertas.scrollTop = logAlertas.scrollHeight; // Auto-scroll
+    }
+
+    function mostrarPopup(titulo, mensagem) {
+        popupTitulo.innerText = titulo;
+        popupMsg.innerText = mensagem;
+        popup.classList.remove('hidden');
+    }
+
+    btnNormal.addEventListener('click', () => {
+        limparClimaAtivo();
+        btnNormal.classList.add('active');
+        
+        kpiUva.innerText = "58.7%";
+        kpiCafe.innerText = "66.3%";
+        kpiAbsorcao.innerText = "94.8%";
+        kpiStatusTag.innerText = "Excelente";
+        kpiStatusTag.className = "sector-tag highlight";
+
+        statusDrenagem.innerText = "FECHADO";
+        statusDrenagem.className = "actuator-status";
+
+        adicionarLog("🟢 Clima estabilizado em Rosário do Ivaí.", "sistema");
+    });
+
+    btnChuva.addEventListener('click', () => {
+        limparClimaAtivo();
+        btnChuva.classList.add('active');
+
+        kpiUva.innerText = "84.2%";
+        kpiCafe.innerText = "89.5%";
+        kpiAbsorcao.innerText = "71.3%";
+        kpiStatusTag.innerText = "Alerta";
+        kpiStatusTag.className = "sector-tag highlight danger";
+
+        statusDrenagem.innerText = "ABERTO FLUXO";
+        statusDrenagem.className = "actuator-status active";
+
+        adicionarLog("⚠️ Saturação de solo por precipitação.", "alerta");
+        mostrarPopup("ALERTA DE SATURAÇÃO", "Solo atingindo limite crítico. Válvula de drenagem da encosta foi aberta para conter erosões.");
+    });
+
+    btnSeca.addEventListener('click', () => {
+        limparClimaAtivo();
+        btnSeca.classList.add('active');
+
+        kpiUva.innerText = "31.4%";
+        kpiCafe.innerText = "34.1%";
+        kpiAbsorcao.innerText = "98.9%";
+        kpiStatusTag.innerText = "Crítico";
+        kpiStatusTag.className = "sector-tag highlight danger";
+
+        statusDrenagem.innerText = "BLOQUEADO";
+        statusDrenagem.className = "actuator-status";
+
+        adicionarLog("🔥 Estresse hídrico severo detectado.", "perigo");
+        mostrarPopup("ESTRESSE HÍDRICO IA", "Umidade abaixo do ideal. Sensores recomendam ativação imediata dos aspersores cadastrados.");
+    });
+
+    document.getElementById('btn-fechar-popup').addEventListener('click', () => {
+        popup.classList.add('hidden');
+    });
+
+
+    // ==========================================
+    // SIMULADOR DE ECONOMIA E COOPERATIVA
+    // ==========================================
+    const inputHectares = document.getElementById('input-hectares');
+    const txtEconomia = document.getElementById('txt-economia');
+    const txtLitrosSalvos = document.getElementById('txt-litros-salvos');
+
+    inputHectares.addEventListener('input', (e) => {
+        let val = parseFloat(e.target.value) || 0;
+        if(val < 0) val = 0;
+        
+        let economiaFinanceira = val * 1200;
+        let aguaPoupada = val * 12000;
+
+        txtEconomia.innerText = `R$ ${economiaFinanceira.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
+        txtLitrosSalvos.innerHTML = `Água poupada: <strong>${aguaPoupada.toLocaleString('pt-BR')} Litros</strong>/mês`;
+    });
+
+
+    // ==========================================
+    // INTERATIVIDADE DE HARDWARE (SWITCHES IoT)
+    // ==========================================
+    const switchUva = document.getElementById('switch-uva');
+    const statusBombaUva = document.getElementById('status-bomba-uva');
+    const switchCafe = document.getElementById('switch-cafe');
+    const statusBombaCafe = document.getElementById('status-bomba-cafe');
+
+    switchUva.addEventListener('change', (e) => {
+        if(e.target.checked) {
+            statusBombaUva.innerText = "LIGADO (AUTO)";
+            statusBombaUva.className = "actuator-status active";
+            adicionarLog("⚡ Comando IoT enviado: Motobomba Uva ligada.", "sistema");
+        } else {
+            statusBombaUva.innerText = "DESLIGADO";
+            statusBombaUva.className = "actuator-status";
+            adicionarLog("🛑 Comando IoT enviado: Motobomba Uva desligada.", "sistema");
+        }
+    });
+
+    switchCafe.addEventListener('change', (e) => {
+        if(e.target.checked) {
+            statusBombaCafe.innerText = "LIGADO (AUTO)";
+            statusBombaCafe.className = "actuator-status active";
+            adicionarLog("⚡ Comando IoT enviado: Aspersor Café ligado.", "sistema");
+        } else {
+            statusBombaCafe.innerText = "DESLIGADO";
+            statusBombaCafe.className = "actuator-status";
+            adicionarLog("🛑 Comando IoT enviado: Aspersor Café desligado.", "sistema");
+        }
+    });
+
+
+    // ==========================================
+    // AGROBOT DIAGNÓSTICO (CHAT INTERATIVO)
+    // ==========================================
     const chatBox = document.getElementById('chat-box');
-    const respostasBot = {
-        uva: "No solo de Rosário do Ivaí, o excesso de umidade propicia fungos. Mantenha os aspersores desligados se a IA apontar curva acima de 65%.",
-        relevo: "Nossa topografia acidentada gera enxurradas. A IA analisa a absorção para mitigar riscos de erosão nas encostas.",
-        lora: "Áreas de vale não têm sinal celular estável. O rádio LoRa transmite dados a até 15km sem depender de operadoras de telefonia."
+    const botoesResposta = document.querySelectorAll('.reply-btn');
+
+    const respostasAI = {
+        uva: "🍇 **Diagnóstico Viticultura**: O solo de Rosário do Ivaí exige monitoramento constante devido ao relevo. A IA calcula a taxa de evapotranspiração para evitar que as uvas rachem por excesso de água.",
+        relevo: "⛰️ **Análise Topográfica**: Sendo a capital da videira em região acidentada, curvas de nível inteligentes seguram o escoamento superficial. O sistema monitora a absorção para mitigar riscos de lavagem de nutrientes.",
+        lora: "📡 **Infraestrutura de Rede**: Usamos o protocolo de rádio LoRaWAN devido ao relevo irregular de encostas. Ele permite transmissões de sensores até 15km consumindo o mínimo de bateria (painel solar integrado)."
     };
 
-    // Cliques nas perguntas rápidas do Chatbot
-    document.querySelectorAll('.reply-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const q = e.target.getAttribute('data-question');
-            chatBox.innerHTML += `<div class="message user">${e.target.innerText}</div>`;
+    botoesResposta.forEach(botao => {
+        botao.addEventListener('click', () => {
+            const topico = botao.getAttribute('data-question');
+            const perguntaTexto = botao.innerText;
+
+            // Insere pergunta do usuário no chat
+            chatBox.innerHTML += `<div class="message user">${perguntaTexto}</div>`;
+            
+            // Simula delay de raciocínio da IA
             setTimeout(() => {
-                chatBox.innerHTML += `<div class="message bot">🤖 ${respostasBot[q]}</div>`;
-                chatBox.scrollTop = chatBox.scrollHeight;
+                chatBox.innerHTML += `<div class="message system">${respostasAI[topico]}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight; // Mantém o chat rolando para baixo
             }, 400);
         });
     });
 
-    // Função interna para disparar os Popups de Alerta na tela
-    function dispararAlertaCelular(titulo, mensagem) {
-        if (!alertasAtivados) return;
-        document.getElementById('popup-titulo').innerText = titulo;
-        document.getElementById('popup-mensagem').innerText = mensagem;
-        document.getElementById('popup-alerta').classList.remove('hidden');
-    }
-    
-    document.getElementById('btn-fechar-popup').addEventListener('click', () => {
-        document.getElementById('popup-alerta').classList.add('hidden');
-    });
 
-    // Vinculação de celular simulada
-    document.getElementById('btn-ativar-zap').addEventListener('click', () => {
-        if(!document.getElementById('input-zap').value) return;
-        alertasAtivados = true;
-        alert(`Dispositivo celular pareado com sucesso para alertas preditivos!`);
-    });
+    // ==========================================
+    // FILTRAGEM DINÂMICA DE SETORES
+    // ==========================================
+    const selectCultura = document.getElementById('select-cultura');
+    const cardUvaElement = document.querySelector('.uva-card');
+    const cardCafeElement = document.querySelector('.cafe-card');
 
-    // Calculadora Automática de Economia por Hectare
-    document.getElementById('input-hectares').addEventListener('input', (e) => {
-        let val = parseFloat(e.target.value) || 0;
-        document.getElementById('txt-economia').innerText = `R$ ${(val * 1200).toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-    });
-
-    // Filtros de visualização por cultura e mapas
-    document.getElementById('select-cultura').addEventListener('change', (e) => {
-        const val = e.target.value;
-        const overlay = document.getElementById('map-target');
-        const label = document.getElementById('map-label');
-        if(val === 'uva') {
-            overlay.style.background = "rgba(191, 90, 242, 0.25)"; label.innerText = "Setor Sul (Uvas)";
-            agroChartInstance.setDatasetVisibility(0, true); agroChartInstance.setDatasetVisibility(1, false);
-        } else if(val === 'cafe') {
-            overlay.style.background = "rgba(10, 132, 255, 0.25)"; label.innerText = "Setor Norte (Café)";
-            agroChartInstance.setDatasetVisibility(0, false); agroChartInstance.setDatasetVisibility(1, true);
+    selectCultura.addEventListener('change', (e) => {
+        const filtro = e.target.value;
+        if (filtro === 'uva') {
+            cardUvaElement.style.display = 'block';
+            cardCafeElement.style.display = 'none';
+            adicionarLog("🔍 Painel filtrado: Visualizando apenas Viticultura.", "sistema");
+        } else if (filtro === 'cafe') {
+            cardUvaElement.style.display = 'none';
+            cardCafeElement.style.display = 'block';
+            adicionarLog("🔍 Painel filtrado: Visualizando apenas Cafeicultura.", "sistema");
         } else {
-            overlay.style.background = "rgba(10, 132, 255, 0.08)"; label.innerText = "Propriedade Total";
-            agroChartInstance.setDatasetVisibility(0, true); agroChartInstance.setDatasetVisibility(1, true);
+            cardUvaElement.style.display = 'block';
+            cardCafeElement.style.display = 'block';
+            adicionarLog("🔍 Painel filtrado: Exibindo todos os setores rurais.", "sistema");
         }
-        agroChartInstance.update();
     });
-
-    // Simulador de Clima com Gatilhos de Emergência de Hardware (IoT)
-    document.querySelectorAll('.btn-clima').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            document.querySelectorAll('.btn-clima').forEach(b => b.classList.remove('active'));
-            e.target.classList.add('active');
-            climaAtivo = e.target.id.replace('btn-clima-', '');
-
-            const sUva = document.getElementById('switch-uva'), sCafe = document.getElementById('switch-cafe');
-            const tUva = document.getElementById('status-bomba-uva'), tCafe = document.getElementById('status-bomba-cafe');
-
-            if(climaAtivo === 'seca') {
-                sUva.checked = true; sCafe.checked = true;
-                tUva.innerText = "LIGADO - IA EMERGENCIAL"; tUva.className = "actuator-status active";
-                tCafe.innerText = "LIGADO - IA EMERGENCIAL"; tCafe.className = "actuator-status active";
-                document.getElementById('kpi-absorcao').innerText = "12.4%";
-                document.getElementById('kpi-status-tag').innerText = "Déficit Crítico";
-                agroChartInstance.data.datasets[0].data = [...dadosSeca.uva];
-                agroChartInstance.data.datasets[1].data = [...dadosSeca.cafe];
-                dispararAlertaCelular("☀️ DÉFICIT HÍDRICO", "Aviso Preditivo: Sensores acusam evapotranspiração acelerada. Motores ativados.");
-            } else if(climaAtivo === 'chuva') {
-                sUva.checked = false; sCafe.checked = false;
-                tUva.innerText = "TRAVADO - CHUVA"; tUva.className = "actuator-status";
-                tCafe.innerText = "TRAVADO - CHUVA"; tCafe.className = "actuator-status";
-                document.getElementById('kpi-absorcao').innerText = "41.8%";
-                document.getElementById('kpi-status-tag').innerText = "Alerta Erosão";
-                agroChartInstance.data.datasets[0].data = [...dadosChuva.uva];
-                agroChartInstance.data.datasets[1].data = [...dadosChuva.cafe];
-                dispararAlertaCelular("🚨 REF. DESLAVAMENTO", "Volume pluvial crítico. Irrigação suspensa para controle de lixiviação.");
-            } else {
-                sUva.checked = false; sCafe.checked = false;
-                tUva.innerText = "DESLIGADO"; tUva.className = "actuator-status";
-                tCafe.innerText = "DESLIGADO"; tCafe.className = "actuator-status";
-                document.getElementById('kpi-absorcao').innerText = "94.8%";
-                document.getElementById('kpi-status-tag').innerText = "Excelente";
-                agroChartInstance.data.datasets[0].data = [...dadosNormais.uva];
-                agroChartInstance.data.datasets[1].data = [...dadosNormais.cafe];
-            }
-            agroChartInstance.update();
-        });
-    });
-
-    // Loop que simula a flutuação em tempo real dos sensores (Muda a cada 4 segundos)
-    setInterval(() => {
-        if(climaAtivo !== 'normal') return;
-        const vUva = (Math.random() * (60 - 57) + 57).toFixed(1);
-        const vCafe = (Math.random() * (68 - 64) + 64).toFixed(1);
-        document.getElementById('kpi-uva').innerText = `${vUva}%`;
-        document.getElementById('kpi-cafe').innerText = `${vCafe}%`;
-        agroChartInstance.data.datasets[0].data[4] = parseFloat(vUva);
-        agroChartInstance.data.datasets[1].data[4] = parseFloat(vCafe);
-        agroChartInstance.update('none');
-    }, 4000);
 });
